@@ -138,6 +138,7 @@ class AutoBlogPipeline:
                     title=topic['title'],
                     post_type=topic.get('post_type', 'article'),
                     category=topic.get('category', 'general'),
+                    tags=topic.get('tags', []),
                     push=True  # 원격 저장소에 푸시
                 )
                 
@@ -214,6 +215,9 @@ class AutoBlogPipeline:
                 )
 
                 if generated_content:
+                    # 콘텐츠에서 태그 추출 (간단한 키워드 기반)
+                    extracted_tags = self._extract_tags_from_content(generated_content, topic_title)
+                    
                     # 생성된 콘텐츠를 바탕으로 발행
                     publish_topic = {'title': topic_title, 'post_type': 'article', 'category': 'AI_Trends', 'tags': extracted_tags}
                     post_result = self.generate_and_publish_post(publish_topic, generated_content=generated_content)
@@ -243,6 +247,50 @@ class AutoBlogPipeline:
                 logger.warning(f"  - {error}")
 
         return pipeline_result
+    
+    def _extract_tags_from_content(self, content: str, title: str) -> List[str]:
+        """
+        콘텐츠와 제목에서 태그 추출
+        
+        Args:
+            content (str): 생성된 콘텐츠
+            title (str): 글 제목
+        
+        Returns:
+            List[str]: 추출된 태그 목록
+        """
+        try:
+            import re
+            
+            # 기본 태그들
+            tags = ['AI', 'Technology']  # 동적 파이프라인 기본 태그
+            
+            # 제목에서 키워드 추출
+            title_words = re.findall(r'\b[A-Za-z]{3,}\b', title)
+            for word in title_words[:3]:  # 상위 3개만
+                if word.lower() not in ['the', 'and', 'for', 'with', 'how', 'what', 'why']:
+                    tags.append(word.capitalize())
+            
+            # 콘텐츠에서 기술 키워드 추출
+            tech_keywords = [
+                'AI', 'Machine Learning', 'Blockchain', 'Cloud Computing', 'Cybersecurity',
+                'IoT', 'Data Science', 'Automation', 'DevOps', 'API', 'Mobile', 'Web',
+                'Software', 'Hardware', 'Database', 'Analytics', 'Digital Transformation'
+            ]
+            
+            content_lower = content.lower()
+            for keyword in tech_keywords:
+                if keyword.lower() in content_lower:
+                    tags.append(keyword)
+            
+            # 중복 제거 및 최대 8개로 제한
+            unique_tags = list(dict.fromkeys(tags))[:8]
+            
+            return unique_tags
+            
+        except Exception as e:
+            logger.warning(f"Error extracting tags: {e}")
+            return ['AI', 'Technology', 'Blog']
 
     def run_pipeline(self, mode: str = 'once', count: Optional[int] = None) -> Dict[str, Any]:
         """

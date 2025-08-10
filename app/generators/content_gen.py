@@ -212,21 +212,20 @@ def test_generate_post_with_research():
     """ContentGenerator의 리서치 기반 생성 테스트 함수"""
     try:
         generator = ContentGenerator()
-        content, tags = generator.generate_post_with_research("The Future of Artificial Intelligence")
+        content = generator.generate_post_with_research("The Future of Artificial Intelligence")
         
         if content:
-            print("✅ Research-based content generation test successful!")
+            print("Research-based content generation test successful!")
             print(f"Generated content length: {len(content)} characters")
-            print(f"Extracted Tags: {tags}")
             print("\n--- Generated Content Preview ---")
             print(content[:500] + "...")
         else:
-            print("⚠️ Content generation skipped (likely a duplicate or lack of data).")
+            print("Content generation skipped (likely a duplicate or lack of data).")
         
         return True
 
     except Exception as e:
-        print(f"❌ Research-based content generation test failed: {e}")
+        print(f"Research-based content generation test failed: {e}")
         return False
 
 if __name__ == "__main__":
