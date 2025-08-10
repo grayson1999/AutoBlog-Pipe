@@ -6,8 +6,8 @@
 
 ```
 Phase 0: 스캐폴딩 (30-40m) ✅ 완료
-Phase 1: 사이트 골격 & 배포 (40-50m) 🚧 진행중  
-Phase 2: 콘텐츠 생성기 (60-80m) ⏳ 대기
+Phase 1: 사이트 골격 & 배포 (40-50m) ✅ 완료  
+Phase 2: 콘텐츠 생성기 (60-80m) 🚧 다음 단계
 Phase 3: 발행 자동화 (40-50m) ⏳ 대기  
 Phase 4: 스케줄링 & 로깅 (30-40m) ⏳ 대기
 Phase 5: 초기 콘텐츠 & 런칭 (40-50m) ⏳ 대기
@@ -32,29 +32,29 @@ Phase 5: 초기 콘텐츠 & 런칭 (40-50m) ⏳ 대기
 
 ---
 
-## Phase 1: 사이트 골격 & 배포 연결 🚧 진행중 (40-50m)
+## Phase 1: 사이트 골격 & 배포 연결 ✅ 완료 (40-50m)
 
 ### 1.1 Jekyll 레이아웃 완성 (15m)
 - [x] `site/_config.yml` 업데이트 
 - [x] `site/_layouts/default.html` (헤더/푸터, AdSense 플레이스홀더)
 - [x] `site/_layouts/post.html` (블로그 글 레이아웃)
 - [x] `site/_layouts/page.html` (고정 페이지 레이아웃)
-- [ ] `site/index.html` (최근 글 목록 루프)
+- [x] `site/index.html` (최근 글 목록 루프)
 
 ### 1.2 기본 페이지 생성 (10m)
-- [ ] `site/pages/about.md` (소개 페이지 초안)
-- [ ] `site/pages/privacy.md` (개인정보처리방침)
+- [x] `site/pages/about.md` (소개 페이지 초안)
+- [x] `site/pages/privacy.md` (개인정보처리방침)
 
 ### 1.3 Netlify 배포 설정 (15m)
-- [ ] GitHub 리포지토리 원격 연결
-- [ ] Netlify에서 GitHub 리포 연결
-- [ ] 빌드 설정 확인 (Jekyll)
-- [ ] 도메인 설정
+- [x] GitHub 리포지토리 원격 연결
+- [x] Netlify에서 GitHub 리포 연결
+- [x] 빌드 설정 확인 (Jekyll)
+- [x] 도메인 설정 (auto-comgong.netlify.app)
 
 ### DoD
-- [ ] 리포 main 푸시 → Netlify 빌드 성공 & URL 공개
-- [ ] 인덱스/페이지가 기본 레이아웃으로 보임
-- [ ] 레이아웃에 `<!-- adsense-slot-1 -->` 플레이스홀더 존재
+- [x] 리포 main 푸시 → Netlify 빌드 성공 & URL 공개
+- [x] 인덱스/페이지가 기본 레이아웃으로 보임
+- [x] 레이아웃에 `<!-- adsense-slot-1 -->` 플레이스홀더 존재
 
 ---
 
