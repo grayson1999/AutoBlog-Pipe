@@ -1,0 +1,43 @@
+# Topic Queue for AutoBlog-Pipe
+# Each topic should have: title, category, keywords, and post_type
+
+topics:
+  - title: "10 Best Productivity Apps for Remote Workers in 2025"
+    category: "productivity"
+    keywords: ["remote work", "productivity apps", "digital tools", "work from home"]
+    post_type: "listicle"
+    
+  - title: "Complete Guide to Setting Up a Home Office"
+    category: "workspace"
+    keywords: ["home office", "workspace setup", "ergonomics", "productivity"]
+    post_type: "guide"
+    
+  - title: "Latest Trends in Web Development for 2025"
+    category: "technology"
+    keywords: ["web development", "programming", "frontend", "backend", "trends"]
+    post_type: "summary"
+    
+  - title: "5 Essential Skills Every Digital Marketer Needs"
+    category: "marketing"
+    keywords: ["digital marketing", "skills", "career", "social media"]
+    post_type: "listicle"
+    
+  - title: "How to Build a Personal Brand Online"
+    category: "personal-development"
+    keywords: ["personal brand", "online presence", "social media", "networking"]
+    post_type: "guide"
+    
+  - title: "Top 15 AI Tools That Will Transform Your Business"
+    category: "artificial-intelligence"
+    keywords: ["AI tools", "business automation", "productivity", "machine learning"]
+    post_type: "listicle"
+    
+  - title: "Beginner's Guide to Cryptocurrency Investment"
+    category: "finance"
+    keywords: ["cryptocurrency", "bitcoin", "investment", "blockchain"]
+    post_type: "guide"
+    
+  - title: "Mobile App Development Trends to Watch in 2025"
+    category: "mobile-development"
+    keywords: ["mobile apps", "app development", "iOS", "Android", "trends"]
+    post_type: "summary"
