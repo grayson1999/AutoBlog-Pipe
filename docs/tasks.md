@@ -165,15 +165,15 @@ python app/main.py --mode once --dry-run
 - [ ] (Optional) Reddit, Hacker News API 연동
 - [⚠️] **Google Trends 연동**: `pytrends` 라이브러리 연동 완료했으나, 현재 API 404 오류로 임시 비활성화됨.
 
-### Phase 2.6: Content Research Engine (45분)
+### Phase 2.6: Content Research Engine ✅ 완료 (45분)
 
 **목표**: 선정된 주제에 대해 깊이 있는 정보를 자동으로 리서치하고 검증합니다.
 
-- [ ] `app/research/content_researcher.py` 클래스 생성
-- [ ] **Wikipedia API 연동**: `wikipedia` 라이브러리 활용, 주제의 핵심 정보 및 요약 수집
-- [ ] **News API 연동**: `newsapi-python` 등 활용, 최신 뉴스 및 동향 수집
+- [x] `app/research/content_researcher.py` 클래스 생성
+- [x] **Wikipedia API 연동**: `wikipedia` 라이브러리 활용, 주제의 핵심 정보 및 요약 수집
+- [x] **News API 연동**: `newsapi-python` 활용, 최신 뉴스 및 동향 수집
 - [ ] (Optional) 웹 스크래핑: `BeautifulSoup`, `requests` 활용, 특정 사이트에서 통계/인용문 수집
-- [ ] **팩트 체크 및 검증**:
+- [ ] **팩트 체크 및 검증**: (향후 추가)
   - [ ] 여러 소스 정보 교차 확인
   - [ ] 정보의 최신성 검증 (e.g., 6개월 이내 정보 우선)
   - [ ] 신뢰도 점수 계산 로직

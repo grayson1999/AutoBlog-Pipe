@@ -12,6 +12,7 @@ load_dotenv()
 class Config:
     # OpenAI Configuration
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    NEWS_API_KEY = os.getenv('NEWS_API_KEY')
     
     # Git Configuration
     GIT_USER_NAME = os.getenv('GIT_USER_NAME', 'AutoBot')
