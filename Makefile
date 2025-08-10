@@ -1,4 +1,4 @@
-.PHONY: setup run-once run-seed cron-install check clean help
+.PHONY: setup run-once run-seed run-dynamic cron-install cron-list cron-remove check clean test-logger help
 
 # Default Python command (use python3 if available, otherwise python)
 PYTHON := $(shell command -v python3 2> /dev/null || echo python)
@@ -8,13 +8,17 @@ help:
 	@echo "AutoBlog-Pipe Makefile"
 	@echo ""
 	@echo "Available targets:"
-	@echo "  setup       - Install dependencies from requirements.txt"
-	@echo "  run-once    - Generate and publish one batch of posts"
-	@echo "  run-seed    - Generate initial 5-10 posts for seeding"
-	@echo "  cron-install- Install cron job for daily publishing"
-	@echo "  check       - Verify installation and imports"
-	@echo "  clean       - Remove __pycache__ and temporary files"
-	@echo "  help        - Show this help message"
+	@echo "  setup        - Install dependencies from requirements.txt"
+	@echo "  run-once     - Generate and publish one batch of posts (topics.yml)"
+	@echo "  run-seed     - Generate initial 5-10 posts for seeding (topics.yml)"
+	@echo "  run-dynamic  - Generate post using dynamic pipeline (RSS+Research)"
+	@echo "  cron-install - Install scheduled job for daily publishing"
+	@echo "  cron-list    - List current AutoBlog scheduled jobs"
+	@echo "  cron-remove  - Remove all AutoBlog scheduled jobs"
+	@echo "  test-logger  - Test logging system"
+	@echo "  check        - Verify installation and imports"
+	@echo "  clean        - Remove __pycache__ and temporary files"
+	@echo "  help         - Show this help message"
 
 setup:
 	@echo "Installing dependencies..."
@@ -29,11 +33,25 @@ run-seed:
 	@echo "Running initial seed generation (5-10 posts)..."
 	$(PYTHON) app/main.py --mode seed
 
+run-dynamic:
+	@echo "Running dynamic content generation (RSS+Research)..."
+	$(PYTHON) app/main.py --mode dynamic
+
 cron-install:
-	@echo "Installing cron job for daily posting..."
-	@echo "Adding cron job: 0 9 * * * cd $(PWD) && make run-once"
-	@(crontab -l 2>/dev/null; echo "0 9 * * * cd $(PWD) && make run-once") | crontab -
-	@echo "Cron job installed successfully!"
+	@echo "Installing scheduled job for daily publishing..."
+	$(PYTHON) scripts/cron_setup.py install --schedule daily
+
+cron-list:
+	@echo "Listing AutoBlog scheduled jobs..."
+	$(PYTHON) scripts/cron_setup.py list
+
+cron-remove:
+	@echo "Removing all AutoBlog scheduled jobs..."
+	$(PYTHON) scripts/cron_setup.py remove
+
+test-logger:
+	@echo "Testing logging system..."
+	$(PYTHON) app/utils/logger.py
 
 check:
 	@echo "Checking Python and dependencies..."

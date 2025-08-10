@@ -21,13 +21,11 @@ from app.generators.seo_gen import SEOGenerator
 from app.publishers.repo_writer import RepoWriter
 from app.utils.topic_loader import TopicLoader
 from app.collectors.idea_collector import IdeaCollector
+from app.utils.logger import get_logger, setup_logging
+from app.utils.error_handler import graceful_shutdown, ErrorRecovery, APIError, ContentGenerationError
 
-# 로깅 설정
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+# 고급 로깅 시스템 초기화
+logger = setup_logging("INFO")
 
 class AutoBlogPipeline:
     """AutoBlog 완전 자동화 파이프라인"""
@@ -40,16 +38,22 @@ class AutoBlogPipeline:
             dry_run (bool): True면 실제 발행하지 않고 테스트만
         """
         self.dry_run = dry_run
+        self.error_recovery = ErrorRecovery()
         
         # 컴포넌트 초기화
-        logger.info("Initializing AutoBlog Pipeline components...")
-        self.content_generator = ContentGenerator()
-        self.seo_generator = SEOGenerator()
-        self.repo_writer = RepoWriter()
-        self.topic_loader = TopicLoader()
-        self.idea_collector = IdeaCollector()
+        logger.info("[INIT] Initializing AutoBlog Pipeline components...")
         
-        logger.info("All components initialized successfully")
+        try:
+            self.content_generator = ContentGenerator()
+            self.seo_generator = SEOGenerator()
+            self.repo_writer = RepoWriter()
+            self.topic_loader = TopicLoader()
+            self.idea_collector = IdeaCollector()
+            
+            logger.info("[INIT] All components initialized successfully")
+        except Exception as e:
+            logger.error("[INIT] Failed to initialize pipeline components", exception=e)
+            raise
     
     def select_topic(self, mode: str = 'once') -> List[Dict[str, Any]]:
         """
@@ -171,9 +175,9 @@ class AutoBlogPipeline:
             'errors': []
         }
 
-        logger.info(f"Starting dynamic content generation pipeline for {count} posts...")
+        logger.log_pipeline_start("dynamic", count=count, dry_run=self.dry_run)
         if self.dry_run:
-            logger.info("DRY RUN MODE - No actual publishing")
+            logger.info("[PIPELINE] DRY RUN MODE - No actual publishing")
 
         collected_ideas = self.idea_collector.collect_trending_topics()
         if not collected_ideas:
@@ -238,11 +242,12 @@ class AutoBlogPipeline:
                 pipeline_result['errors'].append(error_msg)
 
         pipeline_result['total_count'] = generated_posts_count # 실제로 생성된 포스트 수
-        success_rate = (pipeline_result['success_count'] / pipeline_result['total_count']) * 100 if pipeline_result['total_count'] > 0 else 0
-        logger.info(f"Dynamic pipeline completed: {pipeline_result['success_count']}/{pipeline_result['total_count']} posts ({success_rate:.1f}% success)")
+        
+        # 파이프라인 완료 로그
+        logger.log_pipeline_end(pipeline_result)
         
         if pipeline_result['errors']:
-            logger.warning(f"Errors/Skips encountered: {len(pipeline_result['errors'])}")
+            logger.warning(f"[PIPELINE] Errors/Skips encountered: {len(pipeline_result['errors'])}")
             for error in pipeline_result['errors']:
                 logger.warning(f"  - {error}")
 
@@ -353,6 +358,7 @@ class AutoBlogPipeline:
             return pipeline_result
 
 
+@graceful_shutdown
 def main():
     """메인 실행 함수"""
     parser = argparse.ArgumentParser(description='AutoBlog-Pipe: AI-powered blog automation')
@@ -362,13 +368,33 @@ def main():
                        help='Test mode - generate content but do not publish')
     parser.add_argument('--count', type=int, default=1,
                        help='Number of posts to generate in dynamic mode (default: 1)')
+    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], default='INFO',
+                       help='Logging level (default: INFO)')
     
     args = parser.parse_args()
     
+    # 로그 레벨 조정
+    if args.log_level != 'INFO':
+        global logger
+        logger = setup_logging(args.log_level)
+    
     try:
+        # 시스템 상태 확인
+        logger.info("[STARTUP] Starting AutoBlog-Pipe...")
+        recovery = ErrorRecovery()
+        health = recovery.check_system_health()
+        
+        # 시스템 건강도 체크
+        critical_issues = [check for check in health['checks'].values() if check.get('status') == 'error']
+        if critical_issues:
+            logger.warning(f"[STARTUP] Found {len(critical_issues)} system issues")
+            for check in critical_issues:
+                logger.warning(f"  - {check.get('message', 'Unknown issue')}")
+        
         # 환경 설정 검증
-        logger.info("Validating configuration...")
+        logger.info("[CONFIG] Validating configuration...")
         Config.validate()
+        logger.info("[CONFIG] Configuration validated successfully")
         
         # 파이프라인 실행
         pipeline = AutoBlogPipeline(dry_run=args.dry_run)
@@ -376,7 +402,9 @@ def main():
         
         # 최종 결과
         if result['success_count'] > 0:
-            print(f"\nSUCCESS: Generated and published {result['success_count']} posts")
+            logger.info(f"[SUCCESS] Pipeline completed successfully: {result['success_count']} posts generated")
+            print(f"\n[SUCCESS] Generated and published {result['success_count']} posts")
+            
             for post in result['posts']:
                 if post['success']:
                     print(f"  - {post['title']}")
@@ -385,20 +413,46 @@ def main():
                         print(f"    Commit: {post['commit_hash'][:8] if post['commit_hash'] else 'N/A'}")
             
             if args.mode == 'once':
-                print("\nNext: Check your Netlify deployment for the new post!")
+                print("\n[INFO] Next: Check your Netlify deployment for the new post!")
             elif args.mode == 'dynamic':
-                print("\nDynamic pipeline complete! Check your Netlify deployment for new posts!")
+                print("\n[INFO] Dynamic pipeline complete! Check your Netlify deployment for new posts!")
             else:
-                print(f"\nSeed mode complete! {result['success_count']} posts ready for AdSense application")
+                print(f"\n[INFO] Seed mode complete! {result['success_count']} posts ready for AdSense application")
             
             return 0
         else:
-            print(f"\nFAILED: No posts were successfully generated")
+            logger.error("[FAILURE] Pipeline completed but no posts were generated")
+            print(f"\n[FAILED] No posts were successfully generated")
+            
+            # 에러 분석
+            if result.get('errors'):
+                print("\nErrors encountered:")
+                for error in result['errors']:
+                    print(f"  - {error}")
+            
             return 1
             
+    except APIError as e:
+        logger.error(f"[API_ERROR] API-related error: {e.error_type}", exception=e)
+        recovery_plan = recovery.recover_from_api_failure(e)
+        print(f"\n[ERROR] API Error: {str(e)}")
+        print(f"[RECOVERY] {recovery_plan['message']}")
+        return 1
+        
+    except ContentGenerationError as e:
+        logger.error("[CONTENT_ERROR] Content generation error", exception=e)
+        print(f"\n[ERROR] Content Generation Error: {str(e)}")
+        return 1
+        
+    except KeyboardInterrupt:
+        logger.info("[INTERRUPT] User interrupted execution")
+        print("\n[INFO] Execution interrupted by user")
+        return 0
+        
     except Exception as e:
-        logger.error(f"AutoBlog-Pipe failed: {e}")
-        print(f"ERROR: {e}")
+        logger.error("[UNEXPECTED] Unexpected error during execution", exception=e)
+        print(f"\n[ERROR] Unexpected error: {str(e)}")
+        print("[DEBUG] Check logs/autoblog.log for detailed error information")
         return 1
 
 
