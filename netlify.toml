@@ -6,15 +6,6 @@
   JEKYLL_ENV = "production"
   RUBY_VERSION = "3.1.0"
 
-[[redirects]]
-  from = "/about"
-  to = "/pages/about/"
-  status = 301
-
-[[redirects]]
-  from = "/privacy"
-  to = "/pages/privacy/"
-  status = 301
 
 [[headers]]
   for = "/*"

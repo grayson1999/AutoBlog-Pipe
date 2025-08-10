@@ -1,8 +1,8 @@
 # Jekyll/GitHub Pages Configuration
-title: "AutoBlog"
+title: "Auto-ComGong"
 description: "AI-generated content for modern digital life"
 baseurl: ""
-url: "https://autoblog-pipe.netlify.app"
+url: "https://auto-comgong.netlify.app"
 
 # Build settings
 markdown: kramdown

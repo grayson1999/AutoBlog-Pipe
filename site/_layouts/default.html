@@ -9,45 +9,88 @@
     <!-- SEO Tags -->
     {% seo %}
     
-    <!-- CSS -->
+    <!-- Modern CSS Framework -->
     <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.5rem;
+            --radius-lg: 1rem;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fff;
+
+        html {
+            scroll-behavior: smooth;
         }
         
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            font-size: 16px;
+        }
+        
+        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 1rem;
         }
         
+        /* Header */
         header {
-            background: #2c3e50;
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(8px);
         }
         
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 0;
         }
         
         .logo {
             font-size: 1.5rem;
-            font-weight: bold;
+            font-weight: 800;
             text-decoration: none;
-            color: white;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "🤖";
+            font-size: 1.2rem;
         }
         
         nav ul {
@@ -57,53 +100,109 @@
         }
         
         nav a {
-            color: white;
+            color: var(--gray-700);
             text-decoration: none;
-            transition: opacity 0.3s;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: all 0.2s;
         }
         
         nav a:hover {
-            opacity: 0.8;
+            color: var(--primary);
+            background: var(--gray-100);
         }
         
+        /* Main Content */
         main {
-            min-height: 70vh;
+            min-height: calc(100vh - 200px);
             padding: 2rem 0;
         }
         
         .content {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 320px;
             gap: 2rem;
-            margin-top: 1rem;
         }
         
         .main-content {
             background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
         
         .sidebar {
-            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: var(--radius-lg);
             padding: 1.5rem;
-            border-radius: 8px;
-            height: fit-content;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar h3 {
+            color: var(--gray-800);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar a {
+            color: var(--gray-600);
+            text-decoration: none;
+            display: block;
+            transition: color 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar a:hover {
+            color: var(--primary);
+        }
+
+        .sidebar small {
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 0.25rem;
         }
         
+        /* Ad Placeholders */
         .ad-placeholder {
-            background: #e9ecef;
-            border: 2px dashed #6c757d;
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            border: 2px dashed var(--gray-300);
             padding: 2rem;
             text-align: center;
-            margin: 1rem 0;
-            border-radius: 4px;
-            color: #6c757d;
+            margin: 1.5rem 0;
+            border-radius: var(--radius-lg);
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .ad-placeholder::before {
+            content: "📢 ";
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
         }
         
+        /* Footer */
         footer {
-            background: #34495e;
-            color: white;
-            padding: 2rem 0;
-            margin-top: 2rem;
+            background: var(--gray-900);
+            color: var(--gray-300);
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
         }
         
         .footer-content {
@@ -111,31 +210,89 @@
         }
         
         .footer-links {
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
         }
         
         .footer-links a {
-            color: white;
+            color: var(--gray-400);
             text-decoration: none;
-            margin: 0 1rem;
+            font-weight: 500;
+            transition: color 0.2s;
         }
         
         .footer-links a:hover {
-            text-decoration: underline;
+            color: white;
+        }
+
+        footer p {
+            color: var(--gray-500);
+            font-size: 0.9rem;
         }
         
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
+        /* Responsive Design */
+        @media (max-width: 1024px) {
             .content {
                 grid-template-columns: 1fr;
             }
             
+            .sidebar {
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 0 0 1rem;
+            }
+
+            .sidebar-card {
+                min-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.75rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+            
             nav ul {
                 gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            main {
+                padding: 1rem 0;
+            }
+
+            .sidebar {
+                flex-direction: column;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav a {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .ad-placeholder {
+                padding: 1.5rem 1rem;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -161,7 +318,7 @@
             <!-- Top AdSense Placeholder -->
             <div class="ad-placeholder">
                 <!-- adsense-slot-1 -->
-                <p>광고 영역 1 (상단 배너)</p>
+                광고 영역 1 (상단 배너)
                 <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
             </div>
 
@@ -171,29 +328,31 @@
                 </div>
                 
                 <aside class="sidebar">
-                    <h3>최근 글</h3>
-                    <ul>
-                        {% for post in site.posts limit:5 %}
-                        <li>
-                            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                            <small>{{ post.date | date: "%Y-%m-%d" }}</small>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                    <div class="sidebar-card">
+                        <h3>최근 글</h3>
+                        <ul>
+                            {% for post in site.posts limit:5 %}
+                            <li>
+                                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                                <small>{{ post.date | date: "%Y-%m-%d" }}</small>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
                     <!-- Sidebar AdSense Placeholder -->
-                    <div class="ad-placeholder" style="margin-top: 2rem;">
+                    <div class="ad-placeholder">
                         <!-- adsense-slot-2 -->
-                        <p>광고 영역 2 (사이드바)</p>
+                        광고 영역 2 (사이드바)
                         <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
                     </div>
                 </aside>
             </div>
 
             <!-- Bottom AdSense Placeholder -->
-            <div class="ad-placeholder" style="margin-top: 2rem;">
+            <div class="ad-placeholder">
                 <!-- adsense-slot-3 -->
-                <p>광고 영역 3 (하단 배너)</p>
+                광고 영역 3 (하단 배너)
                 <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
             </div>
         </div>
