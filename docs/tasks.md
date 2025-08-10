@@ -178,14 +178,14 @@ python app/main.py --mode once --dry-run
   - [ ] 정보의 최신성 검증 (e.g., 6개월 이내 정보 우선)
   - [ ] 신뢰도 점수 계산 로직
 
-### Phase 2.7: Content Deduplication (30분)
+### Phase 2.7: Content Deduplication ✅ 완료 (30분)
 
 **목표**: 발행될 콘텐츠가 기존 콘텐츠와 중복되지 않도록 방지합니다.
 
-- [ ] `app/utils/content_deduplicator.py` 클래스 생성
-- [ ] **기존 발행 글 로드**: `site/_posts` 디렉터리에서 모든 글의 제목과 메타데이터 로드
-- [ ] **유사도 체크**: `scikit-learn` 또는 `difflib` 활용, 신규 주제와 기존 글 제목 간의 유사도 측정 (e.g., 70% 이상 시 중복 간주)
-- [ ] **카테고리별 발행 주기 체크**: 동일 카테고리 글이 너무 짧은 기간 내에 발행되지 않도록 제어 (e.g., 7일 이내 발행 이력 체크)
+- [x] `app/utils/content_deduplicator.py` 클래스 생성
+- [x] **기존 발행 글 로드**: `site/_posts` 디렉터리에서 모든 글의 제목과 메타데이터 로드
+- [x] **유사도 체크**: `difflib` 활용, 신규 주제와 기존 글 제목 간의 유사도 측정 완료
+- [ ] **카테고리별 발행 주기 체크**: 동일 카테고리 글이 너무 짧은 기간 내에 발행되지 않도록 제어 (향후 추가)
 
 ### Phase 2.8: Enhanced Content Generation (30분)
 
