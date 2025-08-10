@@ -187,14 +187,14 @@ python app/main.py --mode once --dry-run
 - [x] **유사도 체크**: `difflib` 활용, 신규 주제와 기존 글 제목 간의 유사도 측정 완료
 - [ ] **카테고리별 발행 주기 체크**: 동일 카테고리 글이 너무 짧은 기간 내에 발행되지 않도록 제어 (향후 추가)
 
-### Phase 2.8: Enhanced Content Generation (30분)
+### Phase 2.8: Enhanced Content Generation ✅ 완료 (30분)
 
 **목표**: 리서치된 데이터를 활용하여 더 풍부하고 정확한 콘텐츠를 생성합니다.
 
-- [ ] `app/generators/content_gen.py` 개선
-  - [ ] `generate_post_with_research` 함수 추가
-  - [ ] **동적 프롬프트 생성**: 리서치 데이터(핵심 정보, 통계, 뉴스 등)를 프롬프트 템플릿에 동적으로 주입
-- [ ] **품질 검증 시스템**:
+- [x] `app/generators/content_gen.py` 개선
+  - [x] `generate_post_with_research` 함수 추가
+  - [x] **동적 프롬프트 생성**: 리서치 데이터(핵심 정보, 통계, 뉴스 등)를 프롬프트 템플릿에 동적으로 주입
+- [ ] **품질 검증 시스템**: (기본 검증만 수행)
   - [ ] 생성된 콘텐츠가 리서치 데이터와 사실관계가 일치하는지 확인
   - [ ] 원본 소스 인용 또는 링크가 적절히 포함되었는지 확인
 

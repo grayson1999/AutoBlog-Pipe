@@ -42,6 +42,8 @@ python app/main.py --mode seed
 
 ## 🏗️ 아키텍처
 
+### 기존: 정적 `topics.yml` 기반 파이프라인
+
 ```
 [Topic Queue] → [Content Generator] → [SEO Meta Builder]
         ↓                         ↓
@@ -53,6 +55,19 @@ python app/main.py --mode seed
                                                 ↓
                                           Public Website + AdSense
 ```
+
+### 신규: 동적 리서치 기반 파이프라인
+
+`topics.yml`의 한계를 넘어, 외부 소스에서 아이디어를 얻고, 리서치를 통해 깊이를 더하며, 중복을 방지하여 지속가능한 콘텐츠를 생성합니다.
+
+```
+[Idea Collector] → [Content Researcher] → [Content Deduplicator] → [Enhanced Generator]
+      ↓                      ↓                        ↓                       ↓
+(Trends, RSS)       (Wikipedia, News)         (Similarity Check)       (Research-based Post)
+                                                                          ↓
+                                                                   [Repo Writer] → ...
+```
+
 
 ## 📁 프로젝트 구조
 
