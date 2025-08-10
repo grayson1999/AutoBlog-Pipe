@@ -24,12 +24,16 @@ class Config:
     SITE_BASE_URL = os.getenv('SITE_BASE_URL')
     
     # Project paths
-    BASE_DIR = Path(__file__).parent.parent
-    APP_DIR = BASE_DIR / 'app'
-    SITE_DIR = BASE_DIR / 'site'
+    PROJECT_ROOT = Path(__file__).parent.parent
+    BASE_DIR = PROJECT_ROOT  # 호환성을 위해 유지
+    APP_DIR = PROJECT_ROOT / 'app'
+    SITE_DIR = PROJECT_ROOT / 'site'
     TOPICS_FILE = APP_DIR / 'topics' / 'topics.yml'
     PROMPTS_DIR = APP_DIR / 'prompts'
     POSTS_DIR = SITE_DIR / '_posts'
+    
+    # Git Configuration (추가)
+    GIT_COMMIT_TEMPLATE = os.getenv('GIT_COMMIT_TEMPLATE', 'feat: 새 블로그 글 발행 - {title}')
     
     @classmethod
     def validate(cls):
