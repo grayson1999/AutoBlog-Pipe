@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "홈"
+title: "Home"
 ---
 
 <div class="home">
@@ -10,7 +10,7 @@ title: "홈"
     </div>
 
     <div class="posts-section">
-        <h2 class="section-title">최근 글</h2>
+        <h2 class="section-title">Recent Posts</h2>
         
         {% if site.posts.size > 0 %}
             <div class="posts-grid">
@@ -41,33 +41,33 @@ title: "홈"
                     </div>
                     {% endif %}
                     
-                    <a href="{{ post.url | relative_url }}" class="read-more">계속 읽기 →</a>
+                    <a href="{{ post.url | relative_url }}" class="read-more">Read More →</a>
                 </article>
                 {% endfor %}
             </div>
 
             {% if site.posts.size > 12 %}
             <div class="pagination-section">
-                <a href="{{ '/archive' | relative_url }}" class="btn-more">더 많은 글 보기</a>
+                <a href="{{ '/archive' | relative_url }}" class="btn-more">View All Posts</a>
             </div>
             {% endif %}
         {% else %}
             <div class="empty-state">
-                <h3>아직 발행된 글이 없습니다</h3>
-                <p>곧 AI가 생성한 흥미로운 콘텐츠들을 만나보실 수 있습니다!</p>
+                <h3>No posts yet</h3>
+                <p>Exciting AI-generated content coming soon!</p>
             </div>
         {% endif %}
     </div>
 
     <!-- Featured Categories -->
     <div class="categories-section">
-        <h2 class="section-title">주요 카테고리</h2>
+        <h2 class="section-title">Featured Categories</h2>
         <div class="categories-grid">
             {% assign categories = site.categories | sort %}
             {% for category in categories limit:6 %}
             <a href="{{ '/category/' | append: category[0] | slugify | relative_url }}" class="category-card">
                 <h4>{{ category[0] | capitalize }}</h4>
-                <span class="post-count">{{ category[1] | size }}개 글</span>
+                <span class="post-count">{{ category[1] | size }} posts</span>
             </a>
             {% endfor %}
         </div>

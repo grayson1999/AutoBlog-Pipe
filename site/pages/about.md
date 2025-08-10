@@ -1,76 +1,76 @@
 ---
 layout: page
-title: "소개"
+title: "About"
 permalink: /about/
 ---
 
-# AutoBlog에 오신 것을 환영합니다! 🤖✍️
+# Welcome to Auto-ComGong! 🤖✍️
 
-## 🎯 우리는 누구인가요?
+## 🎯 Who Are We?
 
-AutoBlog은 **AI 기술을 활용한 자동화된 콘텐츠 플랫폼**입니다. 최신 인공지능 기술을 통해 다양한 주제의 고품질 콘텐츠를 지속적으로 제공하여, 독자분들께 유용하고 흥미로운 정보를 전달하는 것이 목표입니다.
+Auto-ComGong is an **AI-powered automated content platform** that leverages cutting-edge artificial intelligence to deliver high-quality content across various topics. Our mission is to provide readers with valuable and engaging information through consistent, AI-generated insights.
 
-## 📚 다루는 주제들
+## 📚 Topics We Cover
 
-우리는 다음과 같은 다양한 분야의 콘텐츠를 제공합니다:
+We provide content across diverse fields including:
 
-- **🔧 생산성 & 업무 효율성**: 최신 도구, 앱, 방법론 소개
-- **💻 기술 & 개발**: 프로그래밍, 웹 개발, AI/ML 트렌드  
-- **📱 디지털 라이프스타일**: 스마트폰, 가젤, 디지털 웰빙
-- **🚀 창업 & 비즈니스**: 스타트업, 마케팅, 성장 전략
-- **📖 자기계발**: 학습법, 습관 형성, 목표 달성
-- **🌐 트렌드 분석**: 소셜미디어, 문화, 미래 예측
+- **🔧 Productivity & Work Efficiency**: Latest tools, apps, and methodologies
+- **💻 Technology & Development**: Programming, web development, AI/ML trends  
+- **📱 Digital Lifestyle**: Smartphones, gadgets, digital wellness
+- **🚀 Entrepreneurship & Business**: Startups, marketing, growth strategies
+- **📖 Personal Development**: Learning methods, habit formation, goal achievement
+- **🌐 Trend Analysis**: Social media, culture, future predictions
 
-## 🎪 콘텐츠 특징
+## 🎪 Content Features
 
-### ✨ AI로 생성, 사람이 검증
-- 최신 GPT 기술을 활용하여 콘텐츠를 생성합니다
-- 정확성과 유용성을 위해 지속적으로 품질을 모니터링합니다
-- 독자 피드백을 바탕으로 콘텐츠 방향을 개선합니다
+### ✨ AI-Generated, Human-Verified
+- Content generated using the latest GPT technology
+- Continuous quality monitoring for accuracy and usefulness
+- Content direction improved based on reader feedback
 
-### 📅 정기적 업데이트  
-- **매일 새로운 글** 발행으로 늘 신선한 콘텐츠 제공
-- **트렌드 반영**: 실시간으로 화제가 되는 주제들을 빠르게 다룹니다
-- **시리즈 연재**: 심화 주제는 여러 편에 걸쳐 상세히 다룹니다
+### 📅 Regular Updates  
+- **Daily new posts** ensuring fresh content
+- **Trend-responsive**: Quick coverage of trending topics
+- **Series content**: In-depth topics covered across multiple posts
 
-### 🎯 실용성 중심
-- **바로 적용 가능한** 팁과 가이드 제공
-- **단계별 설명**으로 따라하기 쉽게 구성
-- **리소스 링크** 포함으로 추가 학습 지원
+### 🎯 Practicality-Focused
+- **Immediately applicable** tips and guides
+- **Step-by-step explanations** for easy implementation
+- **Resource links** included for additional learning
 
-## 🌟 왜 AutoBlog인가요?
+## 🌟 Why Auto-ComGong?
 
-### 1. **시간 절약** ⏰
-바쁜 일상 속에서도 핵심만 빠르게 파악할 수 있도록 요약된 형태로 제공합니다.
+### 1. **Time-Saving** ⏰
+Get key insights quickly in summarized format, perfect for busy lifestyles.
 
-### 2. **다양성** 🎨  
-한 곳에서 여러 분야의 인사이트를 만나볼 수 있습니다.
+### 2. **Diversity** 🎨  
+Discover insights from multiple fields in one convenient location.
 
-### 3. **최신성** 🔥
-AI의 빠른 정보 처리 능력으로 트렌드를 놓치지 않고 전달합니다.
+### 3. **Timeliness** 🔥
+AI's rapid information processing ensures you never miss the latest trends.
 
-### 4. **접근성** 📱
-모바일 친화적인 디자인으로 언제 어디서나 편리하게 읽을 수 있습니다.
+### 4. **Accessibility** 📱
+Mobile-friendly design for convenient reading anywhere, anytime.
 
-## 📞 소통하고 싶어요!
+## 📞 Let's Connect!
 
-AutoBlog은 독자와의 소통을 중요하게 생각합니다:
+Auto-ComGong values communication with our readers:
 
-- **피드백 환영**: 어떤 주제를 더 다뤘으면 하는지 알려주세요
-- **질문 받아요**: 궁금한 점이나 더 알고 싶은 내용이 있다면 언제든 연락주세요  
-- **개선 제안**: 사이트 사용성이나 콘텐츠 품질 개선 아이디어를 공유해주세요
+- **Feedback Welcome**: Let us know what topics you'd like to see more of
+- **Questions Accepted**: Reach out with any questions or topics you'd like to learn about  
+- **Improvement Suggestions**: Share ideas for better site usability or content quality
 
-## 🚀 미래 계획
+## 🚀 Future Plans
 
-AutoBlog은 지속적으로 발전해 나갈 예정입니다:
+Auto-ComGong will continue to evolve:
 
-- **🎥 멀티미디어 확장**: 동영상, 인포그래픽 등 다양한 형태의 콘텐츠
-- **🤝 커뮤니티 기능**: 독자간 소통과 지식 공유 공간 제공
-- **📊 개인화**: AI 추천 시스템을 통한 맞춤 콘텐츠 제공
-- **🌐 다국어 지원**: 전 세계 독자들과 소통할 수 있는 플랫폼으로 확장
+- **🎥 Multimedia Expansion**: Videos, infographics, and diverse content formats
+- **🤝 Community Features**: Spaces for reader interaction and knowledge sharing
+- **📊 Personalization**: AI recommendation systems for tailored content
+- **🌐 Multi-language Support**: Expanding to connect with global readers
 
 ---
 
-**AutoBlog과 함께 더 스마트하고 효율적인 디지털 라이프를 만들어가요!** 
+**Join Auto-ComGong in creating a smarter, more efficient digital life!** 
 
-*마지막 업데이트: {{ site.time | date: "%Y년 %m월 %d일" }}*
+*Last updated: {{ site.time | date: "%B %d, %Y" }}*

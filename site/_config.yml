@@ -1,6 +1,6 @@
 # Jekyll/GitHub Pages Configuration
 title: "Auto-ComGong"
-description: "AI-generated content for modern digital life"
+description: "AI-powered tech insights and digital trends"
 baseurl: ""
 url: "https://auto-comgong.netlify.app"
 
@@ -33,6 +33,8 @@ defaults:
 author: AutoBot
 twitter_username: 
 github_username: grayson1999
+lang: en
+locale: en_US
 
 # Pagination
 paginate: 10

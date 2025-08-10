@@ -7,7 +7,7 @@ layout: default
         <h1 class="post-title">{{ page.title }}</h1>
         <div class="post-meta">
             <time datetime="{{ page.date | date_to_xmlschema }}">
-                {{ page.date | date: "%Y년 %m월 %d일" }}
+                {{ page.date | date: "%B %d, %Y" }}
             </time>
             {% if page.author %}
             <span class="author">{{ page.author }}</span>
@@ -28,7 +28,7 @@ layout: default
 
     {% if page.tags %}
     <div class="post-tags">
-        <strong>태그:</strong>
+        <strong>Tags:</strong>
         {% for tag in page.tags %}
         <span class="tag">{{ tag }}</span>
         {% endfor %}
@@ -50,10 +50,11 @@ layout: default
 }
 
 .post-title {
-    font-size: 2.5rem;
-    font-weight: bold;
+    font-size: 2.2rem;
+    font-weight: 700;
     margin-bottom: 1rem;
-    line-height: 1.2;
+    line-height: 1.3;
+    color: var(--gray-800);
 }
 
 .post-meta {
@@ -82,8 +83,10 @@ layout: default
 }
 
 .post-content {
-    font-size: 1.1rem;
-    line-height: 1.8;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--gray-700);
+    max-width: 720px;
 }
 
 .post-content h1,
@@ -93,9 +96,9 @@ layout: default
     margin-bottom: 1rem;
 }
 
-.post-content h1 { font-size: 2rem; }
-.post-content h2 { font-size: 1.7rem; }
-.post-content h3 { font-size: 1.4rem; }
+.post-content h1 { font-size: 1.8rem; color: var(--gray-800); }
+.post-content h2 { font-size: 1.5rem; color: var(--gray-800); }
+.post-content h3 { font-size: 1.3rem; color: var(--gray-800); }
 
 .post-content p {
     margin-bottom: 1.5rem;

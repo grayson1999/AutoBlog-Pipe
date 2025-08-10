@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,10 +48,10 @@
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.5;
+            line-height: 1.6;
             color: var(--gray-800);
             background: var(--gray-50);
-            font-size: 14px;
+            font-size: 16px;
         }
         
         /* Container */
@@ -306,9 +306,10 @@
                 <a href="{{ '/' | relative_url }}" class="logo">{{ site.title }}</a>
                 <nav>
                     <ul>
-                        <li><a href="{{ '/' | relative_url }}">홈</a></li>
-                        <li><a href="{{ '/about' | relative_url }}">소개</a></li>
-                        <li><a href="{{ '/privacy' | relative_url }}">개인정보처리방침</a></li>
+                        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+                        <li><a href="{{ '/about' | relative_url }}">About</a></li>
+                        <li><a href="{{ '/categories' | relative_url }}">Categories</a></li>
+                        <li><a href="{{ '/privacy' | relative_url }}">Privacy Policy</a></li>
                     </ul>
                 </nav>
             </div>
@@ -320,7 +321,7 @@
             <!-- Top AdSense Placeholder -->
             <div class="ad-placeholder">
                 <!-- adsense-slot-1 -->
-                광고 영역 1 (상단 배너)
+Advertisement Area 1 (Top Banner)
                 <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
             </div>
 
@@ -331,7 +332,7 @@
                 
                 <aside class="sidebar">
                     <div class="sidebar-card">
-                        <h3>최근 글</h3>
+                        <h3>Recent Posts</h3>
                         <ul>
                             {% for post in site.posts limit:5 %}
                             <li>
@@ -345,7 +346,7 @@
                     <!-- Sidebar AdSense Placeholder -->
                     <div class="ad-placeholder">
                         <!-- adsense-slot-2 -->
-                        광고 영역 2 (사이드바)
+Advertisement Area 2 (Sidebar)
                         <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
                     </div>
                 </aside>
@@ -354,7 +355,7 @@
             <!-- Bottom AdSense Placeholder -->
             <div class="ad-placeholder">
                 <!-- adsense-slot-3 -->
-                광고 영역 3 (하단 배너)
+Advertisement Area 3 (Bottom Banner)
                 <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
             </div>
         </div>
@@ -364,10 +365,10 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-links">
-                    <a href="{{ '/about' | relative_url }}">소개</a>
-                    <a href="{{ '/privacy' | relative_url }}">개인정보처리방침</a>
+                    <a href="{{ '/about' | relative_url }}">About</a>
+                    <a href="{{ '/privacy' | relative_url }}">Privacy Policy</a>
                 </div>
-                <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}. AI로 생성된 콘텐츠입니다.</p>
+                <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}. AI-generated content for tech enthusiasts.</p>
             </div>
         </div>
     </footer>
