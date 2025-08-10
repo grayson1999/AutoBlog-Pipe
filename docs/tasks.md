@@ -13,6 +13,17 @@ Phase 4: 스케줄링 & 로깅 (30-40m) 🚧 다음 단계
 Phase 5: 초기 콘텐츠 & 런칭 (40-50m) ⏳ 대기
 ```
 
+**🔥 신규 로드맵: 지속가능한 콘텐츠 파이프라인 구축**
+```
+Phase 2.5: Content Idea Collector (아이디어 수집)
+    ↓
+Phase 2.6: Content Research Engine (리서치/검증)
+    ↓
+Phase 2.7: Content Deduplication (중복 체크)
+    ↓
+Phase 2.8: Enhanced Content Generation (콘텐츠 생성)
+```
+
 ## 🎉 **핵심 파이프라인 완성!** (Phase 0-3)
 
 **AutoBlog-Pipe 메인 기능 100% 작동 중:**
@@ -34,6 +45,18 @@ python app/main.py --mode seed
 python app/main.py --mode once --dry-run
 ```
 
+---
+## 🚀 Phase 2.5 ~ 2.8: 지속가능한 콘텐츠 시스템 구축
+
+> `topics.yml`의 정적 목록 방식에서 벗어나, 외부 트렌드를 반영하는 동적 콘텐츠 파이프라인을 구축합니다.
+
+### 🎯 구현 우선순위
+1. **Phase 2.5 (핵심)**: Google Trends + RSS 기반 아이디어 수집기
+2. **Phase 2.7 (필수)**: 제목 유사도 기반 기본 중복 체크
+3. **Phase 2.6 (고도화)**: Wikipedia + News API 기반 리서치 엔진
+4. **Phase 2.8 (통합)**: 리서치 데이터를 활용한 콘텐츠 생성
+
+---
 **실제 작동 확인:**
 - ✅ `2025-08-10-complete-guide-to-setting-up-a-home-office.md` 자동 생성
 - ✅ Git 커밋: `dd4705c1 feat: 새 블로그 글 발행 - Complete Guide to Setting Up a Home Office`  
@@ -131,6 +154,51 @@ python app/main.py --mode once --dry-run
 - [x] API 실패 시 적절한 에러 메시지 및 재시도
 - [x] OpenAI 종속성 문제 해결 (httpx 0.27.2 고정)
 
+### Phase 2.5: Content Idea Collector (30분)
+
+**목표**: 외부 소스에서 트렌디한 주제를 자동으로 수집하고 필터링합니다.
+
+- [ ] `app/collectors/idea_collector.py` 클래스 생성
+- [ ] **Google Trends 연동**: `pytrends` 라이브러리 활용, 실시간 트렌드 수집 기능 구현
+- [ ] **RSS Feeds 수집**: `feedparser` 라이브러리 활용, 여러 기술/뉴스 블로그 피드 파싱
+- [ ] (Optional) Reddit, Hacker News API 연동
+- [ ] **아이디어 스코어링**: 트렌드 지수, 검색량, 관련성을 기반으로 아이디어 점수화
+- [ ] **필터링 및 중복 제거**: 기존 주제와 중복되거나 관련 없는 아이디어 제거
+
+### Phase 2.6: Content Research Engine (45분)
+
+**목표**: 선정된 주제에 대해 깊이 있는 정보를 자동으로 리서치하고 검증합니다.
+
+- [ ] `app/research/content_researcher.py` 클래스 생성
+- [ ] **Wikipedia API 연동**: `wikipedia` 라이브러리 활용, 주제의 핵심 정보 및 요약 수집
+- [ ] **News API 연동**: `newsapi-python` 등 활용, 최신 뉴스 및 동향 수집
+- [ ] (Optional) 웹 스크래핑: `BeautifulSoup`, `requests` 활용, 특정 사이트에서 통계/인용문 수집
+- [ ] **팩트 체크 및 검증**:
+  - [ ] 여러 소스 정보 교차 확인
+  - [ ] 정보의 최신성 검증 (e.g., 6개월 이내 정보 우선)
+  - [ ] 신뢰도 점수 계산 로직
+
+### Phase 2.7: Content Deduplication (30분)
+
+**목표**: 발행될 콘텐츠가 기존 콘텐츠와 중복되지 않도록 방지합니다.
+
+- [ ] `app/utils/content_deduplicator.py` 클래스 생성
+- [ ] **기존 발행 글 로드**: `site/_posts` 디렉터리에서 모든 글의 제목과 메타데이터 로드
+- [ ] **유사도 체크**: `scikit-learn` 또는 `difflib` 활용, 신규 주제와 기존 글 제목 간의 유사도 측정 (e.g., 70% 이상 시 중복 간주)
+- [ ] **카테고리별 발행 주기 체크**: 동일 카테고리 글이 너무 짧은 기간 내에 발행되지 않도록 제어 (e.g., 7일 이내 발행 이력 체크)
+
+### Phase 2.8: Enhanced Content Generation (30분)
+
+**목표**: 리서치된 데이터를 활용하여 더 풍부하고 정확한 콘텐츠를 생성합니다.
+
+- [ ] `app/generators/content_gen.py` 개선
+  - [ ] `generate_post_with_research` 함수 추가
+  - [ ] **동적 프롬프트 생성**: 리서치 데이터(핵심 정보, 통계, 뉴스 등)를 프롬프트 템플릿에 동적으로 주입
+- [ ] **품질 검증 시스템**:
+  - [ ] 생성된 콘텐츠가 리서치 데이터와 사실관계가 일치하는지 확인
+  - [ ] 원본 소스 인용 또는 링크가 적절히 포함되었는지 확인
+
+---
 ---
 
 ## Phase 3: 발행 자동화 구현 ✅ 완료 (40-50m)
@@ -162,7 +230,7 @@ python app/main.py --mode once --dry-run
 - [x] 실제 AI 블로그 글 발행 성공 확인
 - [x] 에러 처리 및 상태 추적 시스템
 
----
+
 
 ## Phase 4: 스케줄링 & 로깅 🚧 다음 단계 (30-40m)
 
