@@ -2,24 +2,18 @@
 title: "AutoBlog"
 description: "AI-generated content for modern digital life"
 baseurl: ""
-url: "https://yourdomain.netlify.app"
+url: "https://autoblog-pipe.netlify.app"
 
 # Build settings
 markdown: kramdown
 highlighter: rouge
-theme: minima
-
-# Plugins
 plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
 
-# Collections
-collections:
-  posts:
-    output: true
-    permalink: /:year/:month/:day/:title/
+# Permalinks
+permalink: /:year/:month/:day/:title/
 
 # Defaults
 defaults:
@@ -29,11 +23,42 @@ defaults:
     values:
       layout: "post"
       author: "AutoBot"
+  - scope:
+      path: "pages"
+      type: "pages"
+    values:
+      layout: "page"
 
 # SEO
 author: AutoBot
 twitter_username: 
-github_username:
+github_username: grayson1999
+
+# Pagination
+paginate: 10
+paginate_path: "/page:num/"
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - .jekyll-cache
+  - gemfiles
+  - .git
+  - .github
+
+# Include pages directory
+include:
+  - pages
+
+# Collections
+collections:
+  posts:
+    output: true
 
 # Google Analytics (placeholder)
 # google_analytics: UA-XXXXXXXX-X
