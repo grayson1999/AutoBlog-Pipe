@@ -1,0 +1,78 @@
+---
+layout: default
+---
+
+<article class="page">
+    <header class="page-header">
+        <h1 class="page-title">{{ page.title }}</h1>
+    </header>
+
+    <div class="page-content">
+        {{ content }}
+    </div>
+</article>
+
+<style>
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.page-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.page-content h1,
+.page-content h2,
+.page-content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.page-content h1 { font-size: 2rem; }
+.page-content h2 { font-size: 1.7rem; }
+.page-content h3 { font-size: 1.4rem; }
+
+.page-content p {
+    margin-bottom: 1.5rem;
+}
+
+.page-content ul,
+.page-content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.page-content li {
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding: 1rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .page-content {
+        font-size: 1rem;
+    }
+}
+</style>

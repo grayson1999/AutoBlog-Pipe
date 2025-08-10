@@ -119,7 +119,7 @@ venv_autoblog/
 .ropeproject
 
 # mkdocs documentation
-/site
+site/_posts/*.md 
 
 # mypy
 .mypy_cache/

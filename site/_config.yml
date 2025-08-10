@@ -1,0 +1,42 @@
+# Jekyll/GitHub Pages Configuration
+title: "AutoBlog"
+description: "AI-generated content for modern digital life"
+baseurl: ""
+url: "https://yourdomain.netlify.app"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:year/:month/:day/:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "AutoBot"
+
+# SEO
+author: AutoBot
+twitter_username: 
+github_username:
+
+# Google Analytics (placeholder)
+# google_analytics: UA-XXXXXXXX-X
+
+# AdSense (placeholder for later)
+# adsense_client: ca-pub-XXXXXXXXXXXXXXXX
