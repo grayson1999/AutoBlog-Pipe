@@ -184,26 +184,27 @@ class AutoBlogPipeline:
         
         posts_to_generate = count
         generated_posts_count = 0
-        attempts = 0
-        max_attempts_per_post = 5 # 한 포스트당 최대 시도 횟수
+        total_ideas_processed = 0
+        max_ideas_to_process = len(collected_ideas) * 3 # 무한 루프 방지
 
-        while generated_posts_count < posts_to_generate and attempts < posts_to_generate * max_attempts_per_post:
-            attempts += 1
+        while generated_posts_count < posts_to_generate and total_ideas_processed < max_ideas_to_process:
+            total_ideas_processed += 1
             try:
                 # 아이디어가 고갈되면 다시 수집 (또는 기존 아이디어 재활용)
                 try:
                     idea = next(idea_iterator)
                 except StopIteration:
                     logger.info("Ran out of initial ideas, collecting more...")
-                    collected_ideas = self.idea_collector.collect_trending_topics()
-                    if not collected_ideas:
+                    new_ideas = self.idea_collector.collect_trending_topics()
+                    if not new_ideas:
                         logger.warning("No new ideas collected. Stopping.")
                         break
-                    idea_iterator = iter(collected_ideas)
+                    collected_ideas.extend(new_ideas) # 기존 아이디어에 추가
+                    idea_iterator = iter(new_ideas) # 새로 수집한 아이디어부터 시작
                     idea = next(idea_iterator) # 새로 수집한 아이디어에서 첫 번째 가져오기
 
                 topic_title = idea.get('title', 'Untitled Idea')
-                logger.info(f"Attempting to generate post for: {topic_title} (Attempt {attempts})")
+                logger.info(f"Attempting to generate post for: {topic_title} (Processed idea {total_ideas_processed})")
                 
                 # generate_post_with_research 내부에서 중복 체크 및 리서치 수행
                 generated_content = self.content_generator.generate_post_with_research(
@@ -214,7 +215,7 @@ class AutoBlogPipeline:
 
                 if generated_content:
                     # 생성된 콘텐츠를 바탕으로 발행
-                    publish_topic = {'title': topic_title, 'post_type': 'article', 'category': 'AI_Trends'}
+                    publish_topic = {'title': topic_title, 'post_type': 'article', 'category': 'AI_Trends', 'tags': extracted_tags}
                     post_result = self.generate_and_publish_post(publish_topic, generated_content=generated_content)
                     pipeline_result['posts'].append(post_result)
                     

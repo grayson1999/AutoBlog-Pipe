@@ -1,25 +1,28 @@
-You are an expert blog post writer. Your goal is to write a high-quality, comprehensive, and engaging blog post based on the provided topic and research data.
+Write a comprehensive and engaging blog post based on the provided topic and research data. The post should be in Markdown format and start directly with the main heading `# {{title}}`.
 
-**Topic:**
-{{title}}
+**Instructions for Writing the Blog Post:**
 
-**Category:**
-{{category}}
+1.  **Structure:** Organize the post into logical sections with clear and descriptive subheadings. Use `##` for main sections and `###` for sub-sections. Aim for at least 3-5 main sections.
+    Example Structure:
+    ```markdown
+    # Main Title
 
-**Keywords:**
-{{keywords}}
+    ## Introduction
+    ...
 
-**Research Data:**
-```json
-{{research_data}}
-```
+    ## Section One: Key Aspects
+    ### Sub-section A
+    ...
 
-**Instructions:**
+    ## Section Two: Recent Developments
+    ...
 
-1.  **Structure:** Create a well-structured blog post in Markdown format. It must start with a `# {{title}}` heading. Use `##` for main sections and `###` for sub-sections.
-2.  **Content:** Write a comprehensive article of at least {{word_count}} words. Use the provided **Research Data** to make your post informative and accurate. Synthesize the information from the `key_facts` and `recent_developments` sections. Do not just copy the data; explain it, elaborate on it, and build a narrative around it.
-3.  **Tone:** Maintain an engaging and authoritative tone.
-4.  **Citations:** While you should use the research data, do NOT explicitly mention the sources or include direct links in the post body. The goal is to write a seamless article, not a research report.
-5.  **Originality:** Ensure the final output is original and not just a copy of the provided data. Add your own insights and connect the different pieces of information.
+    ## Conclusion
+    ...
+    ```
+2.  **Content Integration:** Integrate the information from the `Research Data` section into your blog post. Use the key facts and recent developments to explain the topic comprehensively and naturally within the narrative.
+3.  **Tone and Style:** Maintain an informative, authoritative, and engaging tone. Use clear, concise language. Avoid jargon where possible, or explain it if necessary.
+4.  **Originality:** Synthesize the information and rephrase it in your own words. The goal is to create a unique and valuable piece of content.
+5.  **Tags:** At the very end of the blog post, after the conclusion, include a line `Tags: [tag1, tag2, tag3]` where `tag1, tag2, tag3` are 3-5 relevant keywords from the content. These tags should be comma-separated and enclosed in square brackets.
 
-Begin writing the blog post now.
+Generate ONLY the complete blog post content now. Start directly with the main heading `# {{title}}`.

@@ -18,6 +18,7 @@ class Config:
     GIT_USER_NAME = os.getenv('GIT_USER_NAME', 'AutoBot')
     GIT_USER_EMAIL = os.getenv('GIT_USER_EMAIL', 'bot@example.com')
     GIT_REPO_SSH = os.getenv('GIT_REPO_SSH')
+    GIT_COMMIT_MESSAGE_TEMPLATE = os.getenv('GIT_COMMIT_MESSAGE_TEMPLATE', 'feat: 새 블로그 글 발행 - {title}')
     
     # Site Configuration
     TIMEZONE = os.getenv('TIMEZONE', 'Asia/Seoul')

@@ -1,7 +1,7 @@
 import os
-import yaml
 from difflib import SequenceMatcher
 from typing import List, Dict, Any
+import re
 
 class ContentDeduplicator:
     def __init__(self, posts_dir: str = 'site/_posts'):
@@ -9,7 +9,7 @@ class ContentDeduplicator:
         self.published_posts = self._load_published_posts()
 
     def _load_published_posts(self) -> List[Dict[str, Any]]:
-        """`_posts` 디렉터리에서 모든 게시물의 메타데이터를 로드합니다."""
+        """`_posts` 디렉터리에서 모든 게시물의 제목을 로드합니다."""
         posts = []
         if not os.path.exists(self.posts_dir):
             return posts
@@ -20,12 +20,11 @@ class ContentDeduplicator:
                 try:
                     with open(filepath, 'r', encoding='utf-8') as f:
                         content = f.read()
-                        # ---로 구분된 front matter 추출
-                        parts = content.split('---')
-                        if len(parts) >= 3:
-                            front_matter = yaml.safe_load(parts[1])
-                            if front_matter and 'title' in front_matter:
-                                posts.append(front_matter)
+                        # 첫 번째 # 헤딩에서 제목 추출
+                        match = re.search(r'^#\s*(.*)', content, re.MULTILINE)
+                        if match:
+                            title = match.group(1).strip()
+                            posts.append({'title': title})
                 except Exception as e:
                     print(f"Error loading post {filename}: {e}")
         return posts
@@ -51,17 +50,11 @@ if __name__ == '__main__':
     if not os.path.exists('site/_posts'):
         os.makedirs('site/_posts')
     
-    dummy_post_1 = """---
-title: \"Complete Guide to Setting Up a Home Office\"
-layout: post
----
+    dummy_post_1 = """# Complete Guide to Setting Up a Home Office
 
 This is a guide.
 """
-    dummy_post_2 = """---
-title: \"The Ultimate Guide to Home Office Setup\"
-layout: post
----
+    dummy_post_2 = """# The Ultimate Guide to Home Office Setup
 
 This is another guide.
 """

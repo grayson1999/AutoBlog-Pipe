@@ -41,7 +41,7 @@ class ContentGenerator:
         self.client = OpenAI(api_key=self.api_key)
         self.prompts_dir = Config.PROMPTS_DIR
         
-        self.default_model = "gpt-3.5-turbo"
+        self.default_model = "gpt-4o-mini"
         self.default_max_tokens = 2500
         self.default_temperature = 0.7
         self.max_retries = 3
@@ -68,12 +68,11 @@ class ContentGenerator:
             return None
 
         # 3. 프롬프트 준비
+        summarized_research = self._summarize_research_data(research_data)
+
         topic = {
             'title': topic_title,
-            'category': category,
-            'keywords': keywords,
-            'word_count': 1200,
-            'research_data': json.dumps(research_data, indent=2, ensure_ascii=False)
+            'research_data': summarized_research
         }
         
         try:
@@ -81,7 +80,7 @@ class ContentGenerator:
             formatted_prompt = self.format_prompt(template, topic)
 
             # 4. AI 콘텐츠 생성
-            generated_content = self.call_openai_api(formatted_prompt)
+            generated_content = self.call_openai_api(formatted_prompt, topic_title=topic_title, summarized_research=summarized_research)
 
             # 5. 품질 검증
             if not self.validate_content(generated_content):
@@ -93,6 +92,24 @@ class ContentGenerator:
         except Exception as e:
             logger.error(f"Failed to generate post with research for topic '{topic_title}': {e}")
             raise
+
+    def _summarize_research_data(self, research_data: Dict[str, Any]) -> str:
+        """리서치 데이터를 LLM이 이해하기 쉬운 자연어 요약으로 변환합니다."""
+        summary_parts = []
+
+        if research_data.get('key_facts'):
+            summary_parts.append("Key Facts:")
+            for fact in research_data['key_facts']:
+                summary_parts.append(f"- {fact}")
+
+        if research_data.get('recent_developments'):
+            summary_parts.append("\nRecent Developments:")
+            for dev in research_data['recent_developments']:
+                title = dev.get('title', 'N/A')
+                source = dev.get('source', 'N/A')
+                summary_parts.append(f"- {title} (Source: {source})")
+
+        return "\n".join(summary_parts)
     
     def load_prompt_template(self, post_type: str) -> str:
         """프롬프트 템플릿 파일 로드"""
@@ -124,7 +141,7 @@ class ContentGenerator:
             logger.error(f"Missing template variable: {e}")
             raise ValueError(f"Template formatting failed: missing variable {e}")
     
-    def call_openai_api(self, prompt: str, max_tokens: Optional[int] = None, temperature: Optional[float] = None) -> str:
+    def call_openai_api(self, prompt: str, topic_title: str, summarized_research: str, max_tokens: Optional[int] = None, temperature: Optional[float] = None) -> str:
         """OpenAI API 호출하여 텍스트 생성"""
         max_tokens = max_tokens or self.default_max_tokens
         temperature = temperature or self.default_temperature
@@ -134,8 +151,14 @@ class ContentGenerator:
                 response = self.client.chat.completions.create(
                     model=self.default_model,
                     messages=[
-                        {"role": "system", "content": "당신은 전문적인 블로그 작가입니다. 고품질의 유익하고 실용적인 콘텐츠를 작성합니다."},
-                        {"role": "user", "content": prompt}
+                        {
+                            "role": "system", 
+                            "content": f"당신은 전문적인 블로그 작가입니다. 다음 주제에 대한 고품질의 블로그 글을 작성합니다. 글은 마크다운 형식으로 작성하며, 오직 블로그 글 내용만 포함해야 합니다. 어떠한 서론, 메타데이터, 추가적인 설명 없이 바로 글의 제목(#)으로 시작해야 합니다.\n\n주제: {topic_title}\n\n리서치 데이터:\n{summarized_research}"
+                        },
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
                     ],
                     max_tokens=max_tokens,
                     temperature=temperature
@@ -157,16 +180,19 @@ class ContentGenerator:
         if not content or len(content.strip()) < min_length:
             logger.warning(f"Content too short: {len(content)} characters (minimum: {min_length})")
             return False
+        
         if not content.strip().startswith('#'):
             logger.warning("Content doesn't start with proper heading")
             return False
+        
         if content.count('\n##') < 2:
             logger.warning(f"Content has too few sections: {content.count('##')}")
             return False
+        
         return True
     
     def generate_post(self, topic: Dict[str, Any]) -> str:
-        """주제 정보를 바탕으로 블로그 글 생성 (레거시)"""
+        """주제 정보를 바탕으로 블로그 글 생성 (레거시)""" # Legacy method
         required_fields = ['title', 'post_type']
         for field in required_fields:
             if field not in topic:
@@ -175,7 +201,7 @@ class ContentGenerator:
         post_type = topic['post_type']
         template = self.load_prompt_template(post_type)
         formatted_prompt = self.format_prompt(template, topic)
-        generated_content = self.call_openai_api(formatted_prompt)
+        generated_content = self.call_openai_api(formatted_prompt, topic_title=topic['title'], summarized_research="") # summarized_research is not used in legacy mode
         
         if not self.validate_content(generated_content):
             logger.warning("Generated content failed validation, but proceeding...")
@@ -186,11 +212,12 @@ def test_generate_post_with_research():
     """ContentGenerator의 리서치 기반 생성 테스트 함수"""
     try:
         generator = ContentGenerator()
-        content = generator.generate_post_with_research("The Future of Artificial Intelligence")
+        content, tags = generator.generate_post_with_research("The Future of Artificial Intelligence")
         
         if content:
             print("✅ Research-based content generation test successful!")
             print(f"Generated content length: {len(content)} characters")
+            print(f"Extracted Tags: {tags}")
             print("\n--- Generated Content Preview ---")
             print(content[:500] + "...")
         else:
