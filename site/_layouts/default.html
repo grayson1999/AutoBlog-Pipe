@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: 'en' }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
-  <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else
+            %}{{ site.title }}{% endif %}</title>
+        <meta name="description"
+            content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+        <link rel="canonical"
+            href="{{ page.url | replace:'index.html','' | absolute_url }}">
 
-  {% seo %}
+        {% seo %}
 
-  <style>
+        <style>
     /*
       Clean, American-style blog layout focused on readability & accessibility.
       - System font stack (no blocking webfonts)
@@ -47,6 +50,8 @@
       --fs-2: clamp(1.125rem, 1.05rem + .5vw, 1.25rem);
       --fs-3: clamp(1.35rem, 1.15rem + .9vw, 1.75rem);
       --fs-4: clamp(1.75rem, 1.35rem + 1.5vw, 2.25rem);
+
+      color-scheme: light dark;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -68,6 +73,47 @@
         --gray-600: #9ca3af;
         --gray-700: #e5e7eb;
         --gray-800: #f9fafb;
+
+          /* 카드/박스류 배경/테두리/텍스트 */
+        .card,
+        .ad,
+        .sidebar .section,
+        article.article,
+        .post-card,
+        .page,
+        .post,
+        .sidebar-card {
+            background: var(--surface) !important;
+            border-color: var(--border) !important;
+            color: var(--text) !important;
+        }
+
+        /* 제목/링크 대비 강화 */
+        .post-title,
+        .post-title a,
+        .title a,
+        .post-card .title a {
+            color: var(--text) !important;
+            text-decoration: none;
+        }
+
+        /* 메타/요약은 약간 옅게 */
+        .post-meta,
+        .post-date,
+        .excerpt,
+        .post-excerpt {
+            color: var(--text-muted) !important;
+        }
+
+        /* 읽기 링크/태그 칩 */
+        .read-more { color: var(--primary) !important; }
+        .tag,
+        .category,
+        .tag-chip {
+            background: var(--muted-surface) !important;
+            color: var(--text-muted) !important;
+            border: 1px solid var(--border) !important;
+        }
       }
     }
 
@@ -185,111 +231,132 @@
     /* Reading progress */
     .progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 60%, transparent)); z-index: 1001; }
   </style>
-</head>
-<body>
-  <a class="skip-link" href="#content">Skip to content</a>
-  <div class="progress" id="progress"></div>
+    </head>
+    <body>
+        <a class="skip-link" href="#content">Skip to content</a>
+        <div class="progress" id="progress"></div>
 
-  <header role="banner">
-    <div class="container header-wrap">
-      <a href="{{ '/' | relative_url }}" class="brand" aria-label="{{ site.title }} home">
-        <span class="mark" aria-hidden="true">📝</span>
-        <span>{{ site.title }}</span>
-      </a>
+        <header role="banner">
+            <div class="container header-wrap">
+                <a href="{{ '/' | relative_url }}" class="brand"
+                    aria-label="{{ site.title }} home">
+                    <span class="mark" aria-hidden="true">📝</span>
+                    <span>{{ site.title }}</span>
+                </a>
 
-      <nav aria-label="Primary">
-        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">☰</button>
-        <ul id="primaryNav" class="nav-list">
-          <li><a href="{{ '/' | relative_url }}">Home</a></li>
-          <li><a href="{{ '/about' | relative_url }}">About</a></li>
-          <li><a href="{{ '/categories' | relative_url }}">Categories</a></li>
-          <li><a href="{{ '/privacy' | relative_url }}">Privacy</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+                <nav aria-label="Primary">
+                    <button class="nav-toggle" id="navToggle"
+                        aria-expanded="false"
+                        aria-controls="primaryNav">☰</button>
+                    <ul id="primaryNav" class="nav-list">
+                        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+                        <li><a
+                                href="{{ '/about' | relative_url }}">About</a></li>
+                        <li><a
+                                href="{{ '/categories' | relative_url }}">Categories</a></li>
+                        <li><a
+                                href="{{ '/privacy' | relative_url }}">Privacy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
-  <main id="main" role="main">
-    <div class="container">
-      <!-- Top Ad (optional) -->
-      <div class="ad card" aria-label="Advertisement" role="complementary" style="padding: 20px; margin: 18px 0;">
-        <!-- adsense-slot-1 -->
-        Top Banner — place AdSense code here after approval
-      </div>
+        <main id="main" role="main">
+            <div class="container">
+                <!-- Top Ad (optional) -->
+                <div class="ad card" aria-label="Advertisement"
+                    role="complementary" style="padding: 20px; margin: 18px 0;">
+                    <!-- adsense-slot-1 -->
+                    Top Banner — place AdSense code here after approval
+                </div>
 
-      <div class="grid">
-        <article class="article card" itemscope itemtype="https://schema.org/Article">
-          {% if page.title and page.show_title != false %}
-            <header class="post-header">
-              <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
-              <div class="post-meta">
-                <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %d, %Y" }}</time>
-                <span class="dot" aria-hidden="true"></span>
-                <span id="readingTime">~ • min read</span>
-              </div>
-            </header>
-          {% endif %}
+                <div class="grid">
+                    <article class="article card" itemscope
+                        itemtype="https://schema.org/Article">
+                        {% if page.title and page.show_title != false %}
+                        <header class="post-header">
+                            <h1 class="post-title" itemprop="headline">{{
+                                page.title }}</h1>
+                            <div class="post-meta">
+                                <time
+                                    datetime="{{ page.date | date_to_xmlschema }}">{{
+                                    page.date | date: "%b %d, %Y" }}</time>
+                                <span class="dot" aria-hidden="true"></span>
+                                <span id="readingTime">~ • min read</span>
+                            </div>
+                        </header>
+                        {% endif %}
 
-          <div id="content" class="prose" itemprop="articleBody">
-            {{ content }}
-          </div>
+                        <div id="content" class="prose" itemprop="articleBody">
+                            {{ content }}
+                        </div>
 
-          <!-- Bottom Ad inside article (optional) -->
-          <div class="ad" style="margin-top: 28px;">
-            <!-- adsense-slot-3 -->
-            Inline Banner — place AdSense code here after approval
-          </div>
-        </article>
+                        <!-- Bottom Ad inside article (optional) -->
+                        <div class="ad" style="margin-top: 28px;">
+                            <!-- adsense-slot-3 -->
+                            Inline Banner — place AdSense code here after
+                            approval
+                        </div>
+                    </article>
 
-        <aside class="sidebar">
-          <section class="section card" aria-labelledby="toc-title">
-            <h2 class="toc-title" id="toc-title">On this page</h2>
-            <nav aria-label="Table of contents">
-              <ul class="toc" id="toc"></ul>
-            </nav>
-          </section>
+                    <aside class="sidebar">
+                        <section class="section card"
+                            aria-labelledby="toc-title">
+                            <h2 class="toc-title" id="toc-title">On this
+                                page</h2>
+                            <nav aria-label="Table of contents">
+                                <ul class="toc" id="toc"></ul>
+                            </nav>
+                        </section>
 
-          <section class="section card" aria-labelledby="recent-title">
-            <h2 class="side-title" id="recent-title">Recent posts</h2>
-            <ul style="list-style:none; padding:0; margin:0;">
-              {% for post in site.posts limit: 6 %}
-                <li style="margin: 0 0 8px;">
-                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                  <div style="font-size: var(--fs-0); color: var(--text-muted);">{{ post.date | date: "%Y-%m-%d" }}</div>
-                </li>
-              {% endfor %}
-            </ul>
-          </section>
+                        <section class="section card"
+                            aria-labelledby="recent-title">
+                            <h2 class="side-title" id="recent-title">Recent
+                                posts</h2>
+                            <ul style="list-style:none; padding:0; margin:0;">
+                                {% for post in site.posts limit: 6 %}
+                                <li style="margin: 0 0 8px;">
+                                    <a href="{{ post.url | relative_url }}">{{
+                                        post.title }}</a>
+                                    <div
+                                        style="font-size: var(--fs-0); color: var(--text-muted);">{{
+                                        post.date | date: "%Y-%m-%d" }}</div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </section>
 
-          <!-- Sidebar Ad (optional) -->
-          <div class="section card ad" role="complementary">
-            <!-- adsense-slot-2 -->
-            Sidebar — place AdSense code here after approval
-          </div>
-        </aside>
-      </div>
-    </div>
-  </main>
+                        <!-- Sidebar Ad (optional) -->
+                        <div class="section card ad" role="complementary">
+                            <!-- adsense-slot-2 -->
+                            Sidebar — place AdSense code here after approval
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </main>
 
-  <footer role="contentinfo">
-    <div class="container footer-wrap">
-      <nav class="footer-links" aria-label="Footer">
-        <a href="{{ '/about' | relative_url }}">About</a>
-        <a href="{{ '/privacy' | relative_url }}">Privacy</a>
-      </nav>
-      <div>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</div>
-    </div>
-  </footer>
+        <footer role="contentinfo">
+            <div class="container footer-wrap">
+                <nav class="footer-links" aria-label="Footer">
+                    <a href="{{ '/about' | relative_url }}">About</a>
+                    <a href="{{ '/privacy' | relative_url }}">Privacy</a>
+                </nav>
+                <div>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All
+                    rights reserved.</div>
+            </div>
+        </footer>
 
-  {% if site.google_analytics %}
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
-  <script>
+        {% if site.google_analytics %}
+        <script async
+            src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+        <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ site.google_analytics }}');
   </script>
-  {% endif %}
+        {% endif %}
 
-  <script>
+        <script>
     // Mobile nav toggle
     const navToggle = document.getElementById('navToggle');
     const primaryNav = document.getElementById('primaryNav');
@@ -348,5 +415,5 @@
       out.textContent = `${mins} min read`;
     })();
   </script>
-</body>
+    </body>
 </html>
