@@ -40,8 +40,8 @@ class ContentGenerator:
         
         self.client = OpenAI(api_key=self.api_key)
         self.prompts_dir = Config.PROMPTS_DIR
-        
-        self.default_model = "gpt-4o-mini"
+
+        self.default_model = "gpt-5-mini"
         self.default_max_tokens = 2500
         self.default_temperature = 0.7
         self.max_retries = 3
@@ -141,39 +141,53 @@ class ContentGenerator:
             logger.error(f"Missing template variable: {e}")
             raise ValueError(f"Template formatting failed: missing variable {e}")
     
-    def call_openai_api(self, prompt: str, topic_title: str, summarized_research: str, max_tokens: Optional[int] = None, temperature: Optional[float] = None) -> str:
-        """OpenAI API 호출하여 텍스트 생성"""
+    def call_openai_api(self, prompt: str, topic_title: str, summarized_research: str,
+                        max_tokens: Optional[int] = None, temperature: Optional[float] = None) -> str:
         max_tokens = max_tokens or self.default_max_tokens
-        temperature = temperature or self.default_temperature
-        
+        # ⭐ gpt-5 계열에선 temperature를 기본적으로 보내지 않도록 None 권장
+        if self.default_model.startswith("gpt-5"):
+            temperature = None
+
         for attempt in range(self.max_retries):
             try:
-                response = self.client.chat.completions.create(
+                api_kwargs = dict(
                     model=self.default_model,
                     messages=[
-                        {
-                            "role": "system", 
-                            "content": f"당신은 전문적인 블로그 작가입니다. 다음 주제에 대한 고품질의 블로그 글을 작성합니다. 글은 마크다운 형식으로 작성하며, 오직 블로그 글 내용만 포함해야 합니다. 어떠한 서론, 메타데이터, 추가적인 설명 없이 바로 글의 제목(#)으로 시작해야 합니다.\n\n주제: {topic_title}\n\n리서치 데이터:\n{summarized_research}"
-                        },
-                        {
-                            "role": "user",
-                            "content": prompt
-                        }
+                        {"role": "system", "content": (
+                            "당신은 전문 블로그 작가입니다... (생략)\n"
+                            f"주제: {topic_title}\n\n리서치 데이터:\n{summarized_research}"
+                        )},
+                        {"role": "user", "content": prompt},
                     ],
-                    max_tokens=max_tokens,
-                    temperature=temperature
+                    # ✅ gpt-5 계열: max_tokens → max_completion_tokens
+                    max_completion_tokens=max_tokens,
                 )
+                if temperature is not None:
+                    api_kwargs["temperature"] = temperature
+
+                response = self.client.chat.completions.create(**api_kwargs)
+
                 generated_text = response.choices[0].message.content.strip()
                 if not generated_text:
                     raise ValueError("Empty response from OpenAI API")
                 return generated_text
+
             except Exception as e:
+                msg = str(e)
+                # 🔁 모델이 temperature 미지원이면 제거하고 1회 재시도
+                if "temperature" in msg and "Only the default (1) value is supported" in msg and "temperature" in api_kwargs:
+                    api_kwargs.pop("temperature", None)
+                    response = self.client.chat.completions.create(**api_kwargs)
+                    text = response.choices[0].message.content.strip()
+                    if not text:
+                        raise ValueError("Empty response from OpenAI API")
+                    return text
+
                 logger.error(f"OpenAI API error on attempt {attempt + 1}: {e}")
                 if attempt == self.max_retries - 1:
                     raise
                 time.sleep(self.retry_delay)
-        
-        raise Exception(f"Failed to generate content after {self.max_retries} attempts")
+
     
     def validate_content(self, content: str, min_length: int = 500) -> bool:
         """생성된 콘텐츠 품질 검증"""
