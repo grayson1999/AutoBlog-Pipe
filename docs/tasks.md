@@ -154,16 +154,16 @@ python app/main.py --mode once --dry-run
 - [x] API 실패 시 적절한 에러 메시지 및 재시도
 - [x] OpenAI 종속성 문제 해결 (httpx 0.27.2 고정)
 
-### Phase 2.5: Content Idea Collector (30분)
+### Phase 2.5: Content Idea Collector ✅ 완료 (30분)
 
 **목표**: 외부 소스에서 트렌디한 주제를 자동으로 수집하고 필터링합니다.
 
-- [ ] `app/collectors/idea_collector.py` 클래스 생성
-- [ ] **Google Trends 연동**: `pytrends` 라이브러리 활용, 실시간 트렌드 수집 기능 구현
-- [ ] **RSS Feeds 수집**: `feedparser` 라이브러리 활용, 여러 기술/뉴스 블로그 피드 파싱
+- [x] `app/collectors/idea_collector.py` 클래스 생성
+- [x] **RSS Feeds 수집**: `feedparser` 라이브러리 활용, 여러 기술/뉴스 블로그 피드 파싱
+- [x] **필터링 및 중복 제거**: 기본적인 중복 아이디어 제거 로직 구현
+- [ ] **아이디어 스코어링**: 트렌드 지수, 검색량, 관련성을 기반으로 아이디어 점수화 (기본 점수만 구현)
 - [ ] (Optional) Reddit, Hacker News API 연동
-- [ ] **아이디어 스코어링**: 트렌드 지수, 검색량, 관련성을 기반으로 아이디어 점수화
-- [ ] **필터링 및 중복 제거**: 기존 주제와 중복되거나 관련 없는 아이디어 제거
+- [⚠️] **Google Trends 연동**: `pytrends` 라이브러리 연동 완료했으나, 현재 API 404 오류로 임시 비활성화됨.
 
 ### Phase 2.6: Content Research Engine (45분)
 
