@@ -155,9 +155,12 @@ class AutoBlogPipeline:
             result['error'] = error_msg
             return result
 
-    def run_dynamic_pipeline(self) -> Dict[str, Any]:
+    def run_dynamic_pipeline(self, count: int = 1) -> Dict[str, Any]:
         """
         동적 콘텐츠 생성 파이프라인 실행 (아이디어 수집 -> 리서치 -> 생성 -> 발행)
+        
+        Args:
+            count (int): 생성할 포스트 수. 1이면 once, 5-10이면 seed와 유사
         """
         pipeline_result = {
             'mode': 'dynamic',
@@ -167,81 +170,92 @@ class AutoBlogPipeline:
             'errors': []
         }
 
-        logger.info("Starting dynamic content generation pipeline...")
+        logger.info(f"Starting dynamic content generation pipeline for {count} posts...")
         if self.dry_run:
             logger.info("DRY RUN MODE - No actual publishing")
 
-        try:
-            # 1. 아이디어 수집
-            ideas = self.idea_collector.collect_trending_topics()
-            pipeline_result['total_count'] = len(ideas)
-            logger.info(f"Collected {len(ideas)} potential ideas.")
+        collected_ideas = self.idea_collector.collect_trending_topics()
+        if not collected_ideas:
+            logger.warning("No ideas collected. Exiting dynamic pipeline.")
+            return pipeline_result
 
-            if not ideas:
-                logger.warning("No ideas collected. Exiting dynamic pipeline.")
-                return pipeline_result
+        # 아이디어를 무한히 순환하며 사용 (중복 방지 로직이 있으므로)
+        idea_iterator = iter(collected_ideas)
+        
+        posts_to_generate = count
+        generated_posts_count = 0
+        attempts = 0
+        max_attempts_per_post = 5 # 한 포스트당 최대 시도 횟수
 
-            # 2. 각 아이디어별로 리서치 기반 콘텐츠 생성 및 발행 시도
-            for i, idea in enumerate(ideas, 1):
-                topic_title = idea.get('title', 'Untitled Idea')
-                logger.info(f"Processing {i}/{len(ideas)} (Dynamic): {topic_title}")
-                
+        while generated_posts_count < posts_to_generate and attempts < posts_to_generate * max_attempts_per_post:
+            attempts += 1
+            try:
+                # 아이디어가 고갈되면 다시 수집 (또는 기존 아이디어 재활용)
                 try:
-                    # generate_post_with_research 내부에서 중복 체크 및 리서치 수행
-                    generated_content = self.content_generator.generate_post_with_research(
-                        topic_title=topic_title,
-                        category='AI_Trends', # 동적 파이프라인 기본 카테고리
-                        keywords=[] # 키워드는 리서치에서 추출하거나 AI가 생성하도록
-                    )
+                    idea = next(idea_iterator)
+                except StopIteration:
+                    logger.info("Ran out of initial ideas, collecting more...")
+                    collected_ideas = self.idea_collector.collect_trending_topics()
+                    if not collected_ideas:
+                        logger.warning("No new ideas collected. Stopping.")
+                        break
+                    idea_iterator = iter(collected_ideas)
+                    idea = next(idea_iterator) # 새로 수집한 아이디어에서 첫 번째 가져오기
 
-                    if generated_content:
-                        # 생성된 콘텐츠를 바탕으로 발행
-                        # topic 딕셔너리는 publish_post에 필요한 최소한의 정보만 포함
-                        publish_topic = {'title': topic_title, 'post_type': 'article', 'category': 'AI_Trends'}
-                        post_result = self.generate_and_publish_post(publish_topic, generated_content=generated_content)
-                        pipeline_result['posts'].append(post_result)
-                        
-                        if post_result['success']:
-                            pipeline_result['success_count'] += 1
-                        else:
-                            pipeline_result['errors'].append(post_result['error'])
+                topic_title = idea.get('title', 'Untitled Idea')
+                logger.info(f"Attempting to generate post for: {topic_title} (Attempt {attempts})")
+                
+                # generate_post_with_research 내부에서 중복 체크 및 리서치 수행
+                generated_content = self.content_generator.generate_post_with_research(
+                    topic_title=topic_title,
+                    category='AI_Trends', # 동적 파이프라인 기본 카테고리
+                    keywords=[] # 키워드는 리서치에서 추출하거나 AI가 생성하도록
+                )
+
+                if generated_content:
+                    # 생성된 콘텐츠를 바탕으로 발행
+                    publish_topic = {'title': topic_title, 'post_type': 'article', 'category': 'AI_Trends'}
+                    post_result = self.generate_and_publish_post(publish_topic, generated_content=generated_content)
+                    pipeline_result['posts'].append(post_result)
+                    
+                    if post_result['success']:
+                        pipeline_result['success_count'] += 1
+                        generated_posts_count += 1
                     else:
-                        logger.info(f"Skipped generation for '{topic_title}' (e.g., duplicate or insufficient research).")
-                        pipeline_result['errors'].append(f"Skipped: {topic_title}")
+                        pipeline_result['errors'].append(post_result['error'])
+                else:
+                    logger.info(f"Skipped generation for '{topic_title}' (e.g., duplicate or insufficient research).")
+                    pipeline_result['errors'].append(f"Skipped: {topic_title}")
 
-                except Exception as e:
-                    error_msg = f"Failed to process dynamic idea '{topic_title}': {e}"
-                    logger.error(error_msg)
-                    pipeline_result['errors'].append(error_msg)
+            except Exception as e:
+                error_msg = f"Failed to process dynamic idea '{topic_title}': {e}"
+                logger.error(error_msg)
+                pipeline_result['errors'].append(error_msg)
 
-            success_rate = (pipeline_result['success_count'] / pipeline_result['total_count']) * 100 if pipeline_result['total_count'] > 0 else 0
-            logger.info(f"Dynamic pipeline completed: {pipeline_result['success_count']}/{pipeline_result['total_count']} posts ({success_rate:.1f}% success)")
-            
-            if pipeline_result['errors']:
-                logger.warning(f"Errors/Skips encountered: {len(pipeline_result['errors'])}")
-                for error in pipeline_result['errors']:
-                    logger.warning(f"  - {error}")
+        pipeline_result['total_count'] = generated_posts_count # 실제로 생성된 포스트 수
+        success_rate = (pipeline_result['success_count'] / pipeline_result['total_count']) * 100 if pipeline_result['total_count'] > 0 else 0
+        logger.info(f"Dynamic pipeline completed: {pipeline_result['success_count']}/{pipeline_result['total_count']} posts ({success_rate:.1f}% success)")
+        
+        if pipeline_result['errors']:
+            logger.warning(f"Errors/Skips encountered: {len(pipeline_result['errors'])}")
+            for error in pipeline_result['errors']:
+                logger.warning(f"  - {error}")
 
-            return pipeline_result
+        return pipeline_result
 
-        except Exception as e:
-            error_msg = f"Dynamic pipeline failed: {e}"
-            logger.error(error_msg)
-            pipeline_result['errors'].append(error_msg)
-            return pipeline_result
-
-    def run_pipeline(self, mode: str = 'once') -> Dict[str, Any]:
+    def run_pipeline(self, mode: str = 'once', count: Optional[int] = None) -> Dict[str, Any]:
         """
         완전한 파이프라인 실행
         
         Args:
             mode (str): 실행 모드 ('once', 'seed', 'dynamic')
+            count (int, optional): dynamic 모드에서 생성할 포스트 수
         
         Returns:
             Dict: 전체 실행 결과
         """
         if mode == 'dynamic':
-            return self.run_dynamic_pipeline()
+            return self.run_dynamic_pipeline(count=count if count is not None else 1)
         
         pipeline_result = {
             'mode': mode,
@@ -297,6 +311,8 @@ def main():
                        help='Execution mode: once (single post), seed (5-10 posts), or dynamic (collect ideas and generate)')
     parser.add_argument('--dry-run', action='store_true',
                        help='Test mode - generate content but do not publish')
+    parser.add_argument('--count', type=int, default=1,
+                       help='Number of posts to generate in dynamic mode (default: 1)')
     
     args = parser.parse_args()
     
@@ -307,7 +323,7 @@ def main():
         
         # 파이프라인 실행
         pipeline = AutoBlogPipeline(dry_run=args.dry_run)
-        result = pipeline.run_pipeline(args.mode)
+        result = pipeline.run_pipeline(args.mode, count=args.count)
         
         # 최종 결과
         if result['success_count'] > 0:

@@ -221,10 +221,11 @@ python app/main.py --mode once --dry-run
   - [x] `--dry-run` 테스트 모드 지원
   - [x] 상세한 로깅 및 결과 리포트
 
-### 3.3 동적 파이프라인 통합 (30m)
+### 3.3 동적 파이프라인 통합 ✅ 완료 (30분)
 - [x] `app/main.py`에 `IdeaCollector`, `ContentResearcher`, `ContentDeduplicator` 통합
 - [x] `--mode dynamic` 옵션 추가 및 동적 파이프라인 실행 로직 구현
 - [x] `generate_and_publish_post` 함수 개선 (생성된 콘텐츠를 인자로 받을 수 있도록)
+- [x] `dynamic` 모드에서 `count` 인자 지원 및 중복 시 다른 아이디어 시도 로직 구현
 
 ### DoD  
 - [x] `python app/main.py --mode once` 실행 성공
