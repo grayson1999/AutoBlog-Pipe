@@ -1,387 +1,338 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-    <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
-    
-    <!-- SEO Tags -->
-    {% seo %}
-    
-    <!-- Modern CSS Framework -->
-    <style>
-        :root {
-            --primary: #3b82f6;
-            --primary-dark: #2563eb;
-            --secondary: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --light: #f8fafc;
-            --dark: #1e293b;
-            --gray-50: #f8fafc;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-300: #cbd5e1;
-            --gray-600: #475569;
-            --gray-700: #334155;
-            --gray-800: #1e293b;
-            --gray-900: #0f172a;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.5rem;
-            --radius-lg: 1rem;
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  {% seo %}
 
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: var(--gray-800);
-            background: var(--gray-50);
-            font-size: 16px;
-        }
-        
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        
-        /* Header */
-        header {
-            background: white;
-            border-bottom: 1px solid var(--gray-200);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            backdrop-filter: blur(8px);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-        
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            text-decoration: none;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+  <style>
+    /*
+      Clean, American-style blog layout focused on readability & accessibility.
+      - System font stack (no blocking webfonts)
+      - Comfortable line length (60–75ch)
+      - Clear hierarchy, generous whitespace
+      - Light/Dark mode via prefers-color-scheme
+      - Mobile-first, sticky TOC on desktop
+      - Accessible skip link, nav button with aria-
+    */
 
-        .logo::before {
-            content: "🤖";
-            font-size: 1.2rem;
-        }
-        
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-        
-        nav a {
-            color: var(--gray-700);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 0.75rem;
-            border-radius: var(--radius);
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        
-        nav a:hover {
-            color: var(--primary);
-            background: var(--gray-100);
-        }
-        
-        /* Main Content */
-        main {
-            min-height: calc(100vh - 200px);
-            padding: 2rem 0;
-        }
-        
-        .content {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 2rem;
-        }
-        
-        .main-content {
-            background: white;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-        
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+    :root {
+      /* Light theme */
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --muted-surface: #f6f7f9;
+      --text: #0f172a;          /* slate-900 */
+      --text-muted: #475569;    /* slate-600 */
+      --border: #e2e8f0;        /* slate-200 */
+      --primary: #2563eb;       /* blue-600 */
+      --primary-ink: #1e3a8a;   /* blue-900 */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md: 0 8px 24px rgba(2,6,23,.08);
+      --radius: 14px;
 
-        .sidebar-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-        }
+      /* Typography scale */
+      --fs-0: clamp(.84rem, .82rem + .2vw, .92rem);
+      --fs-1: clamp(1rem, .98rem + .2vw, 1.0625rem);
+      --fs-2: clamp(1.125rem, 1.05rem + .5vw, 1.25rem);
+      --fs-3: clamp(1.35rem, 1.15rem + .9vw, 1.75rem);
+      --fs-4: clamp(1.75rem, 1.35rem + 1.5vw, 2.25rem);
+    }
 
-        .sidebar h3 {
-            color: var(--gray-800);
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --surface: #0f172a;      /* slate-900 */
+        --muted-surface: #0b1324;/* deep slate */
+        --text: #e5e7eb;         /* slate-200 */
+        --text-muted: #94a3b8;    /* slate-400 */
+        --border: #1f2937;        /* slate-800 */
+        --primary: #60a5fa;       /* blue-400 */
+        --primary-ink: #bfdbfe;   /* blue-200 */
+        --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+        --shadow-md: 0 10px 30px rgba(0,0,0,.35);
+      }
+    }
 
-        .sidebar ul {
-            list-style: none;
-        }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-        .sidebar li {
-            margin-bottom: 0.5rem;
-        }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      font-size: var(--fs-1);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-        .sidebar a {
-            color: var(--gray-600);
-            text-decoration: none;
-            display: block;
-            transition: color 0.2s;
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 
-        .sidebar a:hover {
-            color: var(--primary);
-        }
+    /* Skip link */
+    .skip-link {
+      position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+    }
+    .skip-link:focus {
+      position: fixed; left: 16px; top: 16px; width: auto; height: auto;
+      background: var(--surface); color: var(--primary-ink); padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 10px; z-index: 9999;
+      box-shadow: var(--shadow-md);
+    }
 
-        .sidebar small {
-            color: var(--gray-500);
-            font-size: 0.75rem;
-            display: block;
-            margin-top: 0.25rem;
-        }
-        
-        /* Ad Placeholders */
-        .ad-placeholder {
-            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
-            border: 2px dashed var(--gray-300);
-            padding: 2rem;
-            text-align: center;
-            margin: 1.5rem 0;
-            border-radius: var(--radius-lg);
-            color: var(--gray-600);
-            font-weight: 500;
-        }
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 1000; backdrop-filter: saturate(180%) blur(10px);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-wrap { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 12px; }
+    .brand {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      font-weight: 700; color: var(--text); letter-spacing: .2px; font-size: 1.05rem;
+    }
+    .brand .mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--muted-surface); box-shadow: var(--shadow-sm); }
 
-        .ad-placeholder::before {
-            content: "📢 ";
-            font-size: 1.2rem;
-            margin-right: 0.5rem;
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--gray-900);
-            color: var(--gray-300);
-            padding: 3rem 0 2rem;
-            margin-top: 4rem;
-        }
-        
-        .footer-content {
-            text-align: center;
-        }
-        
-        .footer-links {
-            margin: 1.5rem 0;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-        }
-        
-        .footer-links a {
-            color: var(--gray-400);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        
-        .footer-links a:hover {
-            color: white;
-        }
+    nav[aria-label="Primary"] { display: flex; align-items: center; gap: 6px; }
+    .nav-list { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; }
+    .nav-list a {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-muted);
+      padding: 8px 12px; border-radius: 10px; border: 1px solid transparent;
+    }
+    .nav-list a:hover { color: var(--text); background: var(--muted-surface); border-color: var(--border); }
 
-        footer p {
-            color: var(--gray-500);
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                flex-direction: row;
-                overflow-x: auto;
-                padding: 0 0 1rem;
-            }
+    .nav-toggle { display: none; border: 1px solid var(--border); background: var(--surface); border-radius: 10px; padding: 8px 10px; }
 
-            .sidebar-card {
-                min-width: 280px;
-            }
-        }
+    /* Layout */
+    main { padding: 28px 0 48px; }
+    .grid {
+      display: grid; gap: 28px;
+      grid-template-columns: 1fr; /* Mobile */
+    }
+    @media (min-width: 980px) {
+      .grid { grid-template-columns: minmax(0, 1fr) 320px; }
+    }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 0.75rem;
-            }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
 
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem 0;
-            }
-            
-            nav ul {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
+    /* Article */
+    article.article { padding: 28px; }
+    .post-header { margin-bottom: 6px; }
+    .post-title { font-size: var(--fs-4); line-height: 1.2; letter-spacing: -.01em; margin: 0; }
+    .post-meta { color: var(--text-muted); font-size: var(--fs-0); display: flex; gap: 14px; align-items: center; margin: 10px 0 0; }
+    .post-meta .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); display: inline-block; }
 
-            .logo {
-                font-size: 1.25rem;
-            }
+    .prose { max-width: 72ch; }
+    .prose p { margin: 1em 0; }
+    .prose h2 { font-size: var(--fs-3); line-height: 1.25; margin: 1.6em 0 .5em; }
+    .prose h3 { font-size: var(--fs-2); line-height: 1.3; margin: 1.4em 0 .4em; }
+    .prose h4 { font-size: 1.1rem; margin: 1.2em 0 .3em; }
+    .prose a { color: var(--primary); text-underline-offset: 2px; }
+    .prose a:hover { text-decoration: underline; }
+    .prose img, .prose video { max-width: 100%; height: auto; border-radius: 10px; }
+    .prose blockquote { margin: 1.2em 0; padding: .8em 1em; background: var(--muted-surface); border-left: 4px solid var(--primary); border-radius: 8px; }
+    .prose code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background: var(--muted-surface); border: 1px solid var(--border); padding: .1em .4em; border-radius: 6px; font-size: .95em; }
+    .prose pre { overflow: auto; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--muted-surface); }
+    .prose table { border-collapse: collapse; width: 100%; overflow: auto; display: block; }
+    .prose th, .prose td { border: 1px solid var(--border); padding: .6em .8em; }
 
-            main {
-                padding: 1rem 0;
-            }
+    /* Sidebar */
+    aside.sidebar { display: grid; gap: 20px; }
+    .sidebar .section { padding: 20px; }
+    .toc-title, .side-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin: 0 0 10px; }
+    .toc { list-style: none; padding: 0; margin: 0; max-height: 60vh; overflow: auto; }
+    .toc a { display: block; padding: 6px 8px; text-decoration: none; color: var(--text-muted); border-radius: 8px; }
+    .toc a:hover { background: var(--muted-surface); color: var(--text); }
+    .toc .toc-h3 { padding-left: 18px; }
 
-            .sidebar {
-                flex-direction: column;
-            }
+    /* Ad placeholders (subtle) */
+    .ad { background: var(--muted-surface); border: 1px dashed var(--border); border-radius: var(--radius); text-align: center; padding: 18px; color: var(--text-muted); }
 
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
+    /* Footer */
+    footer { border-top: 1px solid var(--border); background: var(--surface); }
+    .footer-wrap { padding: 32px 0; color: var(--text-muted); text-align: center; }
+    .footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 8px 0 14px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; padding: 6px 8px; border-radius: 8px; }
+    .footer-links a:hover { color: var(--text); background: var(--muted-surface); }
 
-        @media (max-width: 480px) {
-            nav a {
-                padding: 0.25rem 0.5rem;
-                font-size: 0.9rem;
-            }
+    /* Mobile nav */
+    @media (max-width: 880px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-list { display: none; position: absolute; right: 20px; top: 64px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px; box-shadow: var(--shadow-md); }
+      .nav-list.open { display: flex; flex-direction: column; min-width: 200px; }
+      .nav-list a { padding: 10px 12px; }
+    }
 
-            .ad-placeholder {
-                padding: 1.5rem 1rem;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+    /* Reading progress */
+    .progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 60%, transparent)); z-index: 1001; }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="{{ '/' | relative_url }}" class="logo">{{ site.title }}</a>
-                <nav>
-                    <ul>
-                        <li><a href="{{ '/' | relative_url }}">Home</a></li>
-                        <li><a href="{{ '/about' | relative_url }}">About</a></li>
-                        <li><a href="{{ '/categories' | relative_url }}">Categories</a></li>
-                        <li><a href="{{ '/privacy' | relative_url }}">Privacy Policy</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="progress" id="progress"></div>
 
-    <main>
-        <div class="container">
-            <!-- Top AdSense Placeholder -->
-            <div class="ad-placeholder">
-                <!-- adsense-slot-1 -->
-Advertisement Area 1 (Top Banner)
-                <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
-            </div>
+  <header role="banner">
+    <div class="container header-wrap">
+      <a href="{{ '/' | relative_url }}" class="brand" aria-label="{{ site.title }} home">
+        <span class="mark" aria-hidden="true">📝</span>
+        <span>{{ site.title }}</span>
+      </a>
 
-            <div class="content">
-                <div class="main-content">
-                    {{ content }}
-                </div>
-                
-                <aside class="sidebar">
-                    <div class="sidebar-card">
-                        <h3>Recent Posts</h3>
-                        <ul>
-                            {% for post in site.posts limit:5 %}
-                            <li>
-                                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                                <small>{{ post.date | date: "%Y-%m-%d" }}</small>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+      <nav aria-label="Primary">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav">☰</button>
+        <ul id="primaryNav" class="nav-list">
+          <li><a href="{{ '/' | relative_url }}">Home</a></li>
+          <li><a href="{{ '/about' | relative_url }}">About</a></li>
+          <li><a href="{{ '/categories' | relative_url }}">Categories</a></li>
+          <li><a href="{{ '/privacy' | relative_url }}">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-                    <!-- Sidebar AdSense Placeholder -->
-                    <div class="ad-placeholder">
-                        <!-- adsense-slot-2 -->
-Advertisement Area 2 (Sidebar)
-                        <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
-                    </div>
-                </aside>
-            </div>
+  <main id="main" role="main">
+    <div class="container">
+      <!-- Top Ad (optional) -->
+      <div class="ad card" aria-label="Advertisement" role="complementary" style="padding: 20px; margin: 18px 0;">
+        <!-- adsense-slot-1 -->
+        Top Banner — place AdSense code here after approval
+      </div>
 
-            <!-- Bottom AdSense Placeholder -->
-            <div class="ad-placeholder">
-                <!-- adsense-slot-3 -->
-Advertisement Area 3 (Bottom Banner)
-                <!-- AdSense 승인 후 여기에 광고 코드 삽입 -->
-            </div>
-        </div>
-    </main>
+      <div class="grid">
+        <article class="article card" itemscope itemtype="https://schema.org/Article">
+          {% if page.title and page.show_title != false %}
+            <header class="post-header">
+              <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
+              <div class="post-meta">
+                <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %d, %Y" }}</time>
+                <span class="dot" aria-hidden="true"></span>
+                <span id="readingTime">~ • min read</span>
+              </div>
+            </header>
+          {% endif %}
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-links">
-                    <a href="{{ '/about' | relative_url }}">About</a>
-                    <a href="{{ '/privacy' | relative_url }}">Privacy Policy</a>
-                </div>
-                <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}. AI-generated content for tech enthusiasts.</p>
-            </div>
-        </div>
-    </footer>
+          <div id="content" class="prose" itemprop="articleBody">
+            {{ content }}
+          </div>
 
-    <!-- Google Analytics (placeholder) -->
-    {% if site.google_analytics %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '{{ site.google_analytics }}');
-    </script>
-    {% endif %}
+          <!-- Bottom Ad inside article (optional) -->
+          <div class="ad" style="margin-top: 28px;">
+            <!-- adsense-slot-3 -->
+            Inline Banner — place AdSense code here after approval
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <section class="section card" aria-labelledby="toc-title">
+            <h2 class="toc-title" id="toc-title">On this page</h2>
+            <nav aria-label="Table of contents">
+              <ul class="toc" id="toc"></ul>
+            </nav>
+          </section>
+
+          <section class="section card" aria-labelledby="recent-title">
+            <h2 class="side-title" id="recent-title">Recent posts</h2>
+            <ul style="list-style:none; padding:0; margin:0;">
+              {% for post in site.posts limit: 6 %}
+                <li style="margin: 0 0 8px;">
+                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                  <div style="font-size: var(--fs-0); color: var(--text-muted);">{{ post.date | date: "%Y-%m-%d" }}</div>
+                </li>
+              {% endfor %}
+            </ul>
+          </section>
+
+          <!-- Sidebar Ad (optional) -->
+          <div class="section card ad" role="complementary">
+            <!-- adsense-slot-2 -->
+            Sidebar — place AdSense code here after approval
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container footer-wrap">
+      <nav class="footer-links" aria-label="Footer">
+        <a href="{{ '/about' | relative_url }}">About</a>
+        <a href="{{ '/privacy' | relative_url }}">Privacy</a>
+      </nav>
+      <div>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</div>
+    </div>
+  </footer>
+
+  {% if site.google_analytics %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ site.google_analytics }}');
+  </script>
+  {% endif %}
+
+  <script>
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const primaryNav = document.getElementById('primaryNav');
+    navToggle?.addEventListener('click', () => {
+      const open = primaryNav.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    // Reading progress bar
+    const progress = document.getElementById('progress');
+    const setProgress = () => {
+      const el = document.getElementById('content');
+      if (!el) return; const rect = el.getBoundingClientRect();
+      const total = el.scrollHeight - window.innerHeight;
+      const current = window.scrollY - el.offsetTop + 1; // avoid 0/0
+      const pct = Math.max(0, Math.min(1, current / Math.max(1, total)));
+      progress.style.width = (pct * 100) + '%';
+    };
+    document.addEventListener('scroll', setProgress, { passive: true });
+    window.addEventListener('load', setProgress);
+    window.addEventListener('resize', setProgress);
+
+    // Build TOC + anchor links
+    (function buildTOC(){
+      const container = document.getElementById('toc');
+      const content = document.getElementById('content');
+      if (!container || !content) return;
+      const headings = content.querySelectorAll('h2, h3');
+      if (!headings.length) { container.innerHTML = '<li style="color:var(--text-muted);">No sections</li>'; return; }
+      const slug = s => s.toLowerCase().trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+      headings.forEach(h => {
+        if (!h.id) h.id = slug(h.textContent);
+        const a = document.createElement('a'); a.href = '#' + h.id; a.textContent = h.textContent;
+        const li = document.createElement('li'); li.className = h.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
+        li.appendChild(a); container.appendChild(li);
+        // small anchor link at heading
+        const anchor = document.createElement('a'); anchor.href = '#' + h.id; anchor.setAttribute('aria-label', 'Link to section');
+        anchor.textContent = ' #'; anchor.style.opacity = '.35'; anchor.style.textDecoration = 'none';
+        anchor.addEventListener('mouseenter', () => anchor.style.opacity = '.7');
+        anchor.addEventListener('mouseleave', () => anchor.style.opacity = '.35');
+        h.appendChild(anchor);
+      });
+    })();
+
+    // Estimate reading time (~200 wpm)
+    (function readingTime(){
+      const el = document.getElementById('content');
+      const out = document.getElementById('readingTime');
+      if (!el || !out) return;
+      const text = el.textContent || '';
+      const words = text.trim().split(/\s+/).filter(Boolean).length;
+      const mins = Math.max(1, Math.round(words / 200));
+      out.textContent = `${mins} min read`;
+    })();
+  </script>
 </body>
 </html>

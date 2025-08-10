@@ -2,254 +2,118 @@
 layout: default
 ---
 
-<div class="category-page">
-    <div class="page-header">
-        <nav class="breadcrumb">
-            <a href="{{ '/' | relative_url }}">Home</a>
-            <span class="separator">›</span>
-            <a href="{{ '/categories' | relative_url }}">Categories</a>
-            <span class="separator">›</span>
-            <span class="current">{{ page.category | capitalize }}</span>
-        </nav>
-        
-        <h1>{{ page.category | capitalize }}</h1>
-        <p>{{ site.categories[page.category] | size }} posts in this category</p>
-    </div>
+{% assign posts = site.categories[page.category] | sort: "date" | reverse %}
 
-    {% assign posts = site.categories[page.category] %}
-    {% if posts.size > 0 %}
-        <div class="posts-section">
-            <div class="posts-grid">
-                {% for post in posts %}
-                <article class="post-card">
-                    <div class="post-meta">
-                        <time datetime="{{ post.date | date_to_xmlschema }}" class="post-date">
-                            {{ post.date | date: "%b %d, %Y" }}
-                        </time>
-                    </div>
-                    
-                    <h2 class="post-title">
-                        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                    </h2>
-                    
-                    {% if post.excerpt %}
-                    <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
-                    {% endif %}
-                    
-                    {% if post.tags.size > 0 %}
-                    <div class="post-tags">
-                        {% for tag in post.tags limit:5 %}
-                        <span class="tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <a href="{{ post.url | relative_url }}" class="read-more">Read More →</a>
-                </article>
-                {% endfor %}
-            </div>
-        </div>
-    {% else %}
-        <div class="empty-state">
-            <h3>No posts in this category yet</h3>
-            <p>Check back later for content in {{ page.category | capitalize }}.</p>
-        </div>
-    {% endif %}
+<div class="category-view">
+  <header class="cat-head">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ '/' | relative_url }}">Home</a>
+      <span class="sep" aria-hidden="true">›</span>
+      <a href="{{ '/categories' | relative_url }}">Categories</a>
+      <span class="sep" aria-hidden="true">›</span>
+      <span class="current" aria-current="page">{{ page.category | capitalize }}</span>
+    </nav>
+
+    <h1 class="cat-title">{{ page.category | capitalize }}</h1>
+    <p class="cat-sub">
+      {{ posts | size }} post{% if posts and posts.size != 1 %}s{% endif %} in this category
+    </p>
+  </header>
+
+  {% if posts and posts.size > 0 %}
+    <section class="post-grid">
+      {% for post in posts %}
+        <article class="post-card card" itemscope itemtype="https://schema.org/Article">
+          {% if post.cover %}
+            <a class="thumb" href="{{ post.url | relative_url }}" aria-label="Open: {{ post.title }}">
+              <img src="{{ post.cover | relative_url }}"
+                   alt="{{ post.cover_alt | default: post.title }}"
+                   loading="lazy" decoding="async">
+            </a>
+          {% endif %}
+
+          <div class="meta">
+            <time datetime="{{ post.date | date_to_xmlschema }}" itemprop="datePublished">
+              {{ post.date | date: "%b %d, %Y" }}
+            </time>
+          </div>
+
+          <h2 class="title" itemprop="headline">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h2>
+
+          {% if post.excerpt or post.description %}
+            <p class="excerpt" itemprop="description">
+              {{ post.excerpt | default: post.description | strip_html | truncatewords: 28 }}
+            </p>
+          {% endif %}
+
+          {% if post.tags and post.tags != empty %}
+            <ul class="tags">
+              {% for tag in post.tags limit:6 %}
+                <li><a class="tag-chip" href="{{ '/tags/#' | append: tag | relative_url }}">{{ tag }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <a class="read-more" href="{{ post.url | relative_url }}">Read more</a>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="empty">
+      <h3>No posts in this category yet</h3>
+      <p>Check back later for content in {{ page.category | capitalize }}.</p>
+    </div>
+  {% endif %}
 </div>
 
 <style>
-/* Category Page Styles */
-.category-page {
-    padding: 2rem;
+/* category page tweaks — scoped to #content to 안 번짐 */
+#content .category-view { padding: 18px 0 6px; }
+#content .cat-head { margin: 0 0 18px; }
+#content .cat-title { margin: 4px 0 2px; font-size: var(--fs-4); line-height: 1.2; }
+#content .cat-sub { color: var(--text-muted); margin: 0; }
+
+#content .breadcrumb { font-size: var(--fs-0); color: var(--text-muted); }
+#content .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+#content .breadcrumb a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
+#content .breadcrumb .sep { margin: 0 8px; color: var(--border); }
+#content .breadcrumb .current { color: var(--text); font-weight: 600; }
+
+#content .post-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
-.page-header {
-    margin-bottom: 3rem;
-    padding: 2rem 0;
-}
+#content .post-card { padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+#content .post-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--primary) 25%, var(--border)); }
 
-.breadcrumb {
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-}
+#content .post-card .thumb { display: block; margin: -16px -16px 12px; overflow: hidden; border-top-left-radius: var(--radius); border-top-right-radius: var(--radius); }
+#content .post-card .thumb img { width: 100%; height: auto; display: block; }
 
-.breadcrumb a {
-    color: var(--gray-600);
-    text-decoration: none;
-    transition: color 0.2s;
-}
+#content .post-card .meta { color: var(--text-muted); font-size: var(--fs-0); margin-bottom: 6px; }
+#content .post-card .title { margin: 0 0 6px; font-size: var(--fs-2); line-height: 1.25; }
+#content .post-card .title a { color: var(--text); text-decoration: none; }
+#content .post-card .title a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
-.breadcrumb a:hover {
-    color: var(--primary);
-}
+#content .post-card .excerpt { margin: 8px 0 12px; color: var(--text-muted); }
 
-.breadcrumb .separator {
-    margin: 0 0.75rem;
-    color: var(--gray-400);
-}
+#content .post-card .tags { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+/* tag-chip 스타일은 default/post에서 재사용되므로 동일 클래스 사용 */
+#content .tag-chip { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: var(--muted-surface); border: 1px solid var(--border); text-decoration: none; color: var(--text-muted); font-size: var(--fs-0); }
+#content .tag-chip:hover { background: color-mix(in srgb, var(--primary) 12%, var(--muted-surface)); color: var(--text); border-color: var(--primary); }
 
-.breadcrumb .current {
-    color: var(--gray-800);
-    font-weight: 600;
-}
+#content .read-more { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; color: var(--primary); }
+#content .read-more:hover { text-decoration: underline; text-underline-offset: 2px; }
 
-.page-header h1 {
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: var(--gray-800);
-    margin-bottom: 0.75rem;
-}
+#content .empty { text-align: center; padding: 72px 12px; color: var(--text-muted); }
+#content .empty h3 { margin: 0 0 6px; color: var(--text); }
 
-.page-header p {
-    color: var(--gray-600);
-    font-size: 1.1rem;
-}
-
-.posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
-}
-
-.post-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-    border: 1px solid var(--gray-200);
-    position: relative;
-    overflow: hidden;
-}
-
-.post-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--success));
-}
-
-.post-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--gray-300);
-}
-
-.post-meta {
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
-}
-
-.post-date {
-    color: var(--gray-600);
-    font-weight: 500;
-}
-
-.post-title {
-    margin-bottom: 1rem;
-}
-
-.post-title a {
-    color: var(--gray-800);
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: 600;
-    line-height: 1.3;
-    display: block;
-    transition: color 0.2s;
-}
-
-.post-title a:hover {
-    color: var(--primary);
-}
-
-.post-excerpt {
-    color: var(--gray-600);
-    line-height: 1.5;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
-}
-
-.post-tags {
-    margin-bottom: 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.post-tags .tag {
-    background: var(--gray-100);
-    color: var(--gray-700);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.post-tags .tag:hover {
-    background: var(--primary);
-    color: white;
-}
-
-.read-more {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
-}
-
-.read-more:hover {
-    color: var(--primary-dark);
-    gap: 0.75rem;
-}
-
-.read-more::after {
-    content: '→';
-    transition: transform 0.2s;
-}
-
-.read-more:hover::after {
-    transform: translateX(2px);
-}
-
-.empty-state {
-    text-align: center;
-    padding: 6rem 2rem;
-    color: var(--gray-600);
-}
-
-.empty-state h3 {
-    color: var(--gray-800);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .category-page {
-        padding: 1rem;
-    }
-
-    .page-header h1 {
-        font-size: 1.75rem;
-    }
-    
-    .posts-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .breadcrumb {
-        font-size: 0.85rem;
-    }
+/* compact on narrow screens */
+@media (max-width: 560px) {
+  #content .post-grid { gap: 14px; grid-template-columns: 1fr; }
+  #content .post-card { padding: 14px; }
 }
 </style>
