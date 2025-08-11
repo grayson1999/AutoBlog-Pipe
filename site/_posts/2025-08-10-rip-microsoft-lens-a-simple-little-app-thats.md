@@ -1,7 +1,8 @@
 ---
 author: AutoBot
 categories:
-- AI_Trends
+- Software
+- Mobile Apps
 date: 2025-08-10 22:14:22 +0900
 layout: post
 tags: []

@@ -46,12 +46,12 @@
       --gray-700: #374151;
       --gray-800: #1f2937;
 
-      /* Typography scale */
-      --fs-0: clamp(.84rem, .82rem + .2vw, .92rem);
-      --fs-1: clamp(1rem, .98rem + .2vw, 1.0625rem);
-      --fs-2: clamp(1.125rem, 1.05rem + .5vw, 1.25rem);
-      --fs-3: clamp(1.35rem, 1.15rem + .9vw, 1.75rem);
-      --fs-4: clamp(1.75rem, 1.35rem + 1.5vw, 2.25rem);
+      /* Typography scale - reduced by 15% */
+      --fs-0: clamp(.714rem, .697rem + .17vw, .782rem);
+      --fs-1: clamp(.85rem, .833rem + .17vw, .903rem);
+      --fs-2: clamp(.956rem, .893rem + .425vw, 1.063rem);
+      --fs-3: clamp(1.148rem, .978rem + .765vw, 1.488rem);
+      --fs-4: clamp(1.488rem, 1.148rem + 1.275vw, 1.913rem);
 
       color-scheme: light dark;
     }
@@ -127,10 +127,18 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       color: var(--text);
       background: var(--bg);
-      line-height: 1.7;
+      line-height: 1.75;
       font-size: var(--fs-1);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    /* Enhanced focus states for accessibility */
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
     .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
@@ -177,7 +185,7 @@
       grid-template-columns: 1fr; /* Mobile */
     }
     @media (min-width: 980px) {
-      .grid { grid-template-columns: minmax(0, 1fr) 320px; }
+      .grid:not(.grid-full) { grid-template-columns: minmax(0, 1fr) 320px; }
     }
 
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
@@ -189,13 +197,45 @@
     .post-meta { color: var(--text-muted); font-size: var(--fs-0); display: flex; gap: 14px; align-items: center; margin: 10px 0 0; }
     .post-meta .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); display: inline-block; }
 
-    .prose { max-width: 72ch; }
-    .prose p { margin: 1em 0; }
-    .prose h2 { font-size: var(--fs-3); line-height: 1.25; margin: 1.6em 0 .5em; }
-    .prose h3 { font-size: var(--fs-2); line-height: 1.3; margin: 1.4em 0 .4em; }
-    .prose h4 { font-size: 1.1rem; margin: 1.2em 0 .3em; }
-    .prose a { color: var(--primary); text-underline-offset: 2px; }
-    .prose a:hover { text-decoration: underline; }
+    .prose { 
+      max-width: 68ch; 
+      line-height: 1.8;
+    }
+    .prose p { 
+      margin: 1.2em 0; 
+      line-height: inherit;
+    }
+    .prose h2 { 
+      font-size: var(--fs-3); 
+      line-height: 1.3; 
+      margin: 2em 0 .6em; 
+      font-weight: 700;
+      color: var(--text);
+    }
+    .prose h3 { 
+      font-size: var(--fs-2); 
+      line-height: 1.35; 
+      margin: 1.6em 0 .5em; 
+      font-weight: 600;
+      color: var(--text);
+    }
+    .prose h4 { 
+      font-size: 1.1rem; 
+      line-height: 1.4;
+      margin: 1.4em 0 .4em; 
+      font-weight: 600;
+      color: var(--text);
+    }
+    .prose a { 
+      color: var(--primary); 
+      text-underline-offset: 3px; 
+      text-decoration-thickness: 1.5px;
+      transition: all 0.2s ease;
+    }
+    .prose a:hover { 
+      text-decoration: underline;
+      color: var(--primary-ink);
+    }
     .prose img, .prose video { max-width: 100%; height: auto; border-radius: 10px; }
     .prose blockquote { margin: 1.2em 0; padding: .8em 1em; background: var(--muted-surface); border-left: 4px solid var(--primary); border-radius: 8px; }
     .prose code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background: var(--muted-surface); border: 1px solid var(--border); padding: .1em .4em; border-radius: 6px; font-size: .95em; }
@@ -204,13 +244,72 @@
     .prose th, .prose td { border: 1px solid var(--border); padding: .6em .8em; }
 
     /* Sidebar */
-    aside.sidebar { display: grid; gap: 20px; }
-    .sidebar .section { padding: 20px; }
-    .toc-title, .side-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin: 0 0 10px; }
-    .toc { list-style: none; padding: 0; margin: 0; max-height: 60vh; overflow: auto; }
-    .toc a { display: block; padding: 6px 8px; text-decoration: none; color: var(--text-muted); border-radius: 8px; }
-    .toc a:hover { background: var(--muted-surface); color: var(--text); }
-    .toc .toc-h3 { padding-left: 18px; }
+    aside.sidebar { 
+      display: grid; 
+      gap: 20px; 
+      position: sticky; 
+      top: 90px; 
+      align-self: start;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    .sidebar .section { 
+      padding: 20px; 
+      transition: all 0.3s ease;
+    }
+    .sidebar .section.highlight {
+      border-color: var(--primary);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+    }
+    .toc-title, .side-title { 
+      font-size: 0.95rem; 
+      font-weight: 700; 
+      color: var(--text); 
+      margin: 0 0 10px; 
+      transition: color 0.3s ease;
+    }
+    .sidebar .section.highlight .toc-title,
+    .sidebar .section.highlight .side-title {
+      color: var(--primary);
+    }
+    .toc { 
+      list-style: none; 
+      padding: 0; 
+      margin: 0; 
+      max-height: 50vh; 
+      overflow: auto; 
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .toc::-webkit-scrollbar {
+      width: 4px;
+    }
+    .toc::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .toc::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+    .toc a { 
+      display: block; 
+      padding: 6px 8px; 
+      text-decoration: none; 
+      color: var(--text-muted); 
+      border-radius: 8px; 
+      transition: all 0.2s ease;
+      border-left: 2px solid transparent;
+    }
+    .toc a:hover { 
+      background: var(--muted-surface); 
+      color: var(--text); 
+    }
+    .toc a.active {
+      background: color-mix(in srgb, var(--primary) 10%, transparent);
+      color: var(--primary);
+      border-left-color: var(--primary);
+    }
+    .toc .toc-h3 { padding-left: 24px; }
 
     /* Ad placeholders (subtle) */
     .ad { background: var(--muted-surface); border: 1px dashed var(--border); border-radius: var(--radius); text-align: center; padding: 18px; color: var(--text-muted); }
@@ -232,6 +331,51 @@
 
     /* Reading progress */
     .progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 60%, transparent)); z-index: 1001; }
+
+    /* Sticky post title */
+    .sticky-title {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: color-mix(in srgb, var(--surface) 95%, transparent);
+      backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 999;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .sticky-title.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .sticky-title-content {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      font-size: var(--fs-1);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .sticky-title {
+        top: 56px;
+      }
+      
+      .sticky-title-content {
+        padding: 10px 16px;
+        font-size: var(--fs-0);
+      }
+    }
   </style>
     </head>
     <body>
@@ -272,7 +416,7 @@
                     Top Banner — place AdSense code here after approval
                 </div>
 
-                <div class="grid">
+                <div class="grid{% if page.url == '/' or page.title == 'Home' %} grid-full{% endif %}">
                     <article class="article card" itemscope
                         itemtype="https://schema.org/Article">
                         {% if page.title and page.show_title != false %}
@@ -301,6 +445,7 @@
                         </div>
                     </article>
 
+                    {% unless page.url == '/' or page.title == 'Home' %}
                     <aside class="sidebar">
                         <section class="section card"
                             aria-labelledby="toc-title">
@@ -334,6 +479,7 @@
                             Sidebar — place AdSense code here after approval
                         </div>
                     </aside>
+                    {% endunless %}
                 </div>
             </div>
         </main>
@@ -415,6 +561,115 @@
       const words = text.trim().split(/\s+/).filter(Boolean).length;
       const mins = Math.max(1, Math.round(words / 200));
       out.textContent = `${mins} min read`;
+    })();
+
+    // Sticky post title
+    (function stickyTitle(){
+      const postHeader = document.querySelector('.post-header');
+      const postTitle = document.querySelector('.post-title');
+      const content = document.querySelector('#content');
+      
+      if (!postHeader || !postTitle || !content) return;
+      
+      // Create sticky title element
+      const stickyTitle = document.createElement('div');
+      stickyTitle.className = 'sticky-title';
+      stickyTitle.innerHTML = `<div class="sticky-title-content">${postTitle.textContent}</div>`;
+      document.body.appendChild(stickyTitle);
+      
+      let isSticky = false;
+      
+      function updateStickyTitle() {
+        const headerRect = postHeader.getBoundingClientRect();
+        const shouldStick = headerRect.bottom < 80;
+        
+        if (shouldStick && !isSticky) {
+          stickyTitle.classList.add('show');
+          isSticky = true;
+        } else if (!shouldStick && isSticky) {
+          stickyTitle.classList.remove('show');
+          isSticky = false;
+        }
+      }
+      
+      document.addEventListener('scroll', updateStickyTitle, { passive: true });
+      window.addEventListener('resize', updateStickyTitle);
+      updateStickyTitle();
+    })();
+
+    // Enhanced sidebar behavior
+    (function sidebarEnhancements(){
+      const tocSection = document.querySelector('[aria-labelledby="toc-title"]');
+      const recentSection = document.querySelector('[aria-labelledby="recent-title"]');
+      const content = document.getElementById('content');
+      const tocLinks = document.querySelectorAll('.toc a');
+      
+      if (!tocSection || !recentSection || !content) return;
+      
+      let isNearEnd = false;
+      
+      function updateSidebar() {
+        // Check reading progress
+        const contentRect = content.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const contentBottom = contentRect.bottom;
+        const scrollProgress = Math.max(0, Math.min(1, 
+          (viewportHeight - contentRect.top) / (contentRect.height - viewportHeight * 0.5)
+        ));
+        
+        // Check if near end of article (90% read)
+        const shouldHighlightRecent = scrollProgress > 0.9;
+        
+        if (shouldHighlightRecent && !isNearEnd) {
+          recentSection.classList.add('highlight');
+          tocSection.classList.remove('highlight');
+          isNearEnd = true;
+        } else if (!shouldHighlightRecent && isNearEnd) {
+          recentSection.classList.remove('highlight');
+          isNearEnd = false;
+        }
+        
+        // Highlight active TOC item
+        if (!isNearEnd) {
+          updateActiveTocItem();
+        }
+      }
+      
+      function updateActiveTocItem() {
+        const headings = content.querySelectorAll('h2, h3');
+        let activeHeading = null;
+        
+        headings.forEach(heading => {
+          const rect = heading.getBoundingClientRect();
+          if (rect.top <= 120 && rect.top >= -200) {
+            activeHeading = heading;
+          }
+        });
+        
+        // Remove active class from all links
+        tocLinks.forEach(link => link.classList.remove('active'));
+        
+        // Add active class to current section
+        if (activeHeading) {
+          const activeLink = document.querySelector(`.toc a[href="#${activeHeading.id}"]`);
+          if (activeLink) {
+            activeLink.classList.add('active');
+            // Scroll into view if needed
+            const tocContainer = document.querySelector('.toc');
+            if (tocContainer) {
+              const linkRect = activeLink.getBoundingClientRect();
+              const containerRect = tocContainer.getBoundingClientRect();
+              if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
+                activeLink.scrollIntoView({ block: 'center', behavior: 'smooth' });
+              }
+            }
+          }
+        }
+      }
+      
+      document.addEventListener('scroll', updateSidebar, { passive: true });
+      window.addEventListener('resize', updateSidebar);
+      setTimeout(updateSidebar, 100); // Initial call after DOM is ready
     })();
   </script>
     </body>

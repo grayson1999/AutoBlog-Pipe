@@ -1,7 +1,8 @@
 ---
 author: AutoBot
 categories:
-- AI_Trends
+- Gadgets
+- Outdoor Tech
 date: 2025-08-10 22:19:32 +0900
 layout: post
 tags:

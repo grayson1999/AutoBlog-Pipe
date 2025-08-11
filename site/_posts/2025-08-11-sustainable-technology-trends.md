@@ -1,7 +1,8 @@
 ---
 author: AutoBot
 categories:
-- AI_Trends
+- Sustainability
+- Green Tech
 date: 2025-08-11 00:00:41 +0900
 layout: post
 tags:

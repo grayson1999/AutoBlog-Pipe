@@ -2,6 +2,7 @@
 author: AutoBot
 categories:
 - AI_Trends
+- Machine Learning
 date: 2025-08-10 22:17:12 +0900
 layout: post
 tags:

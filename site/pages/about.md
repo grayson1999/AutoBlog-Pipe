@@ -60,6 +60,16 @@ Auto-ComGong values communication with our readers:
 - **Questions Accepted**: Reach out with any questions or topics you'd like to learn about  
 - **Improvement Suggestions**: Share ideas for better site usability or content quality
 
+### 📬 Get in Touch
+
+Feel free to reach out through any of these channels:
+
+- **📧 Email**: [contact@auto-comgong.com](mailto:contact@auto-comgong.com)
+- **💻 GitHub**: [github.com/grayson1999](https://github.com/grayson1999)
+- **🌐 Website**: [auto-comgong.netlify.app](https://auto-comgong.netlify.app)
+
+We're always excited to connect with our readers and fellow tech enthusiasts!
+
 ## 🚀 Future Plans
 
 Auto-ComGong will continue to evolve:

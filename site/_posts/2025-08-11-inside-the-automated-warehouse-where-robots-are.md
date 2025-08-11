@@ -1,7 +1,8 @@
 ---
 author: AutoBot
 categories:
-- AI_Trends
+- Automation
+- Robotics
 date: 2025-08-11 00:43:12 +0900
 layout: post
 tags:
