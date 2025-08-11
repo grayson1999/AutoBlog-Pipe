@@ -15,6 +15,9 @@ plugins:
 # Permalinks
 permalink: /:year/:month/:day/:title/
 
+# Category pages
+permalink_category: /category/:name/
+
 # Defaults
 defaults:
   - scope:
@@ -22,6 +25,12 @@ defaults:
       type: "posts"
     values:
       show_title: false
+  - scope:
+      path: "category"
+      type: "pages"
+    values:
+      layout: "category"
+      sitemap: false
 
 # SEO
 author: AutoBot

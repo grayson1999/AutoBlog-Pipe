@@ -2,7 +2,29 @@
 layout: default
 ---
 
-{% assign posts = site.categories[page.category] | sort: "date" | reverse %}
+{% comment %}
+Dynamic category page - automatically works for any category
+No need to create individual category files
+{% endcomment %}
+
+{% assign category_name = page.url | remove: '/category/' | remove: '/' %}
+{% assign posts = site.categories[category_name] | sort: "date" | reverse %}
+
+{% comment %}Try alternative category name formats if no posts found{% endcomment %}
+{% if posts.size == 0 %}
+  {% assign alt_category = category_name | replace: '-', '_' %}
+  {% assign posts = site.categories[alt_category] | sort: "date" | reverse %}
+{% endif %}
+
+{% if posts.size == 0 %}
+  {% assign alt_category = category_name | replace: '-', ' ' | capitalize %}
+  {% assign posts = site.categories[alt_category] | sort: "date" | reverse %}
+{% endif %}
+
+{% if posts.size == 0 %}
+  {% assign alt_category = category_name | replace: '-', ' ' %}
+  {% assign posts = site.categories[alt_category] | sort: "date" | reverse %}
+{% endif %}
 
 <div class="category-view">
   <header class="cat-head">
@@ -11,10 +33,10 @@ layout: default
       <span class="sep" aria-hidden="true">›</span>
       <a href="{{ '/categories' | relative_url }}">Categories</a>
       <span class="sep" aria-hidden="true">›</span>
-      <span class="current" aria-current="page">{{ page.category | capitalize }}</span>
+      <span class="current" aria-current="page">{{ category_name | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</span>
     </nav>
 
-    <h1 class="cat-title">{{ page.category | capitalize }}</h1>
+    <h1 class="cat-title">{{ category_name | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h1>
     <p class="cat-sub">
       {{ posts | size }} post{% if posts and posts.size != 1 %}s{% endif %} in this category
     </p>
@@ -51,7 +73,7 @@ layout: default
           {% if post.tags and post.tags != empty %}
             <ul class="tags">
               {% for tag in post.tags limit:6 %}
-                <li><a class="tag-chip" href="{{ '/tags/#' | append: tag | relative_url }}">{{ tag }}</a></li>
+                <li><a class="tag-chip" href="{{ '/tags/#' | append: tag | slugify | relative_url }}">{{ tag }}</a></li>
               {% endfor %}
             </ul>
           {% endif %}
@@ -63,13 +85,13 @@ layout: default
   {% else %}
     <div class="empty">
       <h3>No posts in this category yet</h3>
-      <p>Check back later for content in {{ page.category | capitalize }}.</p>
+      <p>Check back later for content in {{ category_name | replace: '-', ' ' | replace: '_', ' ' | capitalize }}.</p>
     </div>
   {% endif %}
 </div>
 
 <style>
-/* category page tweaks — scoped to #content to 안 번짐 */
+/* category page tweaks — scoped to #content to avoid conflicts */
 #content .category-view { padding: 18px 0 6px; }
 #content .cat-head { margin: 0 0 18px; }
 #content .cat-title { margin: 4px 0 2px; font-size: var(--fs-4); line-height: 1.2; }
@@ -87,10 +109,26 @@ layout: default
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
-#content .post-card { padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-#content .post-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--primary) 25%, var(--border)); }
+#content .post-card { 
+  padding: 16px; 
+  border-radius: var(--radius); 
+  border: 1px solid var(--border); 
+  box-shadow: var(--shadow-sm); 
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; 
+}
+#content .post-card:hover { 
+  transform: translateY(-4px); 
+  box-shadow: var(--shadow-md); 
+  border-color: color-mix(in srgb, var(--primary) 25%, var(--border)); 
+}
 
-#content .post-card .thumb { display: block; margin: -16px -16px 12px; overflow: hidden; border-top-left-radius: var(--radius); border-top-right-radius: var(--radius); }
+#content .post-card .thumb { 
+  display: block; 
+  margin: -16px -16px 12px; 
+  overflow: hidden; 
+  border-top-left-radius: var(--radius); 
+  border-top-right-radius: var(--radius); 
+}
 #content .post-card .thumb img { width: 100%; height: auto; display: block; }
 
 #content .post-card .meta { color: var(--text-muted); font-size: var(--fs-0); margin-bottom: 6px; }
@@ -101,12 +139,36 @@ layout: default
 #content .post-card .excerpt { margin: 8px 0 12px; color: var(--text-muted); }
 
 #content .post-card .tags { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-wrap: wrap; gap: 8px; }
-/* tag-chip 스타일은 default/post에서 재사용되므로 동일 클래스 사용 */
-#content .tag-chip { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: var(--muted-surface); border: 1px solid var(--border); text-decoration: none; color: var(--text-muted); font-size: var(--fs-0); }
-#content .tag-chip:hover { background: color-mix(in srgb, var(--primary) 12%, var(--muted-surface)); color: var(--text); border-color: var(--primary); }
 
-#content .read-more { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; color: var(--primary); }
-#content .read-more:hover { text-decoration: underline; text-underline-offset: 2px; }
+#content .tag-chip { 
+  display: inline-flex; 
+  align-items: center; 
+  padding: 6px 10px; 
+  border-radius: 999px; 
+  background: var(--muted-surface); 
+  border: 1px solid var(--border); 
+  text-decoration: none; 
+  color: var(--text-muted); 
+  font-size: var(--fs-0); 
+}
+#content .tag-chip:hover { 
+  background: color-mix(in srgb, var(--primary) 12%, var(--muted-surface)); 
+  color: var(--text); 
+  border-color: var(--primary); 
+}
+
+#content .read-more { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 6px; 
+  font-weight: 600; 
+  text-decoration: none; 
+  color: var(--primary); 
+}
+#content .read-more:hover { 
+  text-decoration: underline; 
+  text-underline-offset: 2px; 
+}
 
 #content .empty { text-align: center; padding: 72px 12px; color: var(--text-muted); }
 #content .empty h3 { margin: 0 0 6px; color: var(--text); }

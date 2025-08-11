@@ -1,0 +1,2 @@
+# This directory is kept for Jekyll to recognize /category/* URLs
+# Dynamic category pages are handled by _layouts/category.html
