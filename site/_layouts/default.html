@@ -376,6 +376,11 @@
         padding: 10px 16px;
         font-size: var(--fs-0);
       }
+      
+      /* Hide "On this page" TOC on mobile to prevent infinite scroll issues */
+      .sidebar .section[aria-labelledby="toc-title"] {
+        display: none;
+      }
     }
   </style>
     </head>
