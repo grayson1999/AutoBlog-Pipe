@@ -9,9 +9,17 @@ module Jekyll
       dir = site.config['category_dir'] || 'category'
       
       site.categories.each_key do |category|
-        category_slug = category.downcase.gsub(/\s+/, '-').gsub(/[^\w-]/, '')
+        # Create pages for both underscore and hyphen versions
+        category_underscore = category.downcase.gsub(/\s+/, '_').gsub(/[^\w_]/, '')
+        category_hyphen = category.downcase.gsub(/[\s_]+/, '-').gsub(/[^\w-]/, '')
         
-        site.pages << CategoryPage.new(site, site.source, File.join(dir, category_slug), category)
+        # Create underscore version (for existing URLs)
+        site.pages << CategoryPage.new(site, site.source, File.join(dir, category_underscore), category)
+        
+        # Create hyphen version (for new URLs) if different
+        if category_underscore != category_hyphen
+          site.pages << CategoryPage.new(site, site.source, File.join(dir, category_hyphen), category)
+        end
       end
     end
   end
