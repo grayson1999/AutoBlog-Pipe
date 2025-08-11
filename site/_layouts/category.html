@@ -7,24 +7,8 @@ Dynamic category page - automatically works for any category
 No need to create individual category files
 {% endcomment %}
 
-{% assign category_name = page.url | remove: '/category/' | remove: '/' %}
+{% assign category_name = page.category %}
 {% assign posts = site.categories[category_name] | sort: "date" | reverse %}
-
-{% comment %}Try alternative category name formats if no posts found{% endcomment %}
-{% if posts.size == 0 %}
-  {% assign alt_category = category_name | replace: '-', '_' %}
-  {% assign posts = site.categories[alt_category] | sort: "date" | reverse %}
-{% endif %}
-
-{% if posts.size == 0 %}
-  {% assign alt_category = category_name | replace: '-', ' ' | capitalize %}
-  {% assign posts = site.categories[alt_category] | sort: "date" | reverse %}
-{% endif %}
-
-{% if posts.size == 0 %}
-  {% assign alt_category = category_name | replace: '-', ' ' %}
-  {% assign posts = site.categories[alt_category] | sort: "date" | reverse %}
-{% endif %}
 
 <div class="category-view">
   <header class="cat-head">

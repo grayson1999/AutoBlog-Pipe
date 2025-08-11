@@ -28,7 +28,7 @@ permalink: /categories/
           {% endfor %}
         </div>
         
-        <a href="{{ '/category/' | append: category[0] | replace: '_', '-' | replace: ' ', '-' | downcase | relative_url }}" class="view-all">
+        <a href="{{ '/category/' | append: category[0] | downcase | replace: '_', '-' | replace: ' ', '-' | relative_url }}" class="view-all">
           View all posts in {{ category[0] | replace: '_', ' ' | replace: '-', ' ' | capitalize }}
         </a>
       </div>

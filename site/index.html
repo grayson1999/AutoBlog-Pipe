@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: home
 title: "Home"
 ---
 
@@ -65,7 +65,7 @@ title: "Home"
         <div class="categories-grid">
             {% assign categories = site.categories | sort %}
             {% for category in categories limit:6 %}
-            <a href="{{ '/category/' | append: category[0] | replace: '_', '-' | replace: ' ', '-' | downcase | relative_url }}" class="category-card">
+            <a href="{{ '/category/' | append: category[0] | downcase | replace: '_', '-' | replace: ' ', '-' | relative_url }}" class="category-card">
                 <h4>{{ category[0] | capitalize }}</h4>
                 <span class="post-count">{{ category[1] | size }} posts</span>
             </a>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6659594664617513"
+     crossorigin="anonymous"></script>
+        <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else
+            %}{{ site.title }}{% endif %}</title>
+        <meta name="description"
+            content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+        <link rel="canonical"
+            href="{{ page.url | replace:'index.html','' | absolute_url }}">
+
+        {% seo %}
+
+        <style>
+    /*
+      Clean, American-style blog layout focused on readability & accessibility.
+      - System font stack (no blocking webfonts)
+      - Comfortable line length (60–75ch)
+      - Clear hierarchy, generous whitespace
+      - Light/Dark mode via prefers-color-scheme
+      - Mobile-first, sticky TOC on desktop
+      - Accessible skip link, nav button with aria-
+    */
+
+    :root {
+      /* Light theme */
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --muted-surface: #f6f7f9;
+      --text: #0f172a;          /* slate-900 */
+      --text-muted: #475569;    /* slate-600 */
+      --border: #e2e8f0;        /* slate-200 */
+      --primary: #2563eb;       /* blue-600 */
+      --primary-ink: #1e3a8a;   /* blue-900 */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md: 0 8px 24px rgba(2,6,23,.08);
+      --radius: 14px;
+
+      /* Gray scale for homepage */
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+
+      /* Typography scale - reduced by 15% */
+      --fs-0: clamp(.714rem, .697rem + .17vw, .782rem);
+      --fs-1: clamp(.85rem, .833rem + .17vw, .903rem);
+      --fs-2: clamp(.956rem, .893rem + .425vw, 1.063rem);
+      --fs-3: clamp(1.148rem, .978rem + .765vw, 1.488rem);
+      --fs-4: clamp(1.488rem, 1.148rem + 1.275vw, 1.913rem);
+
+      color-scheme: light dark;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --surface: #0f172a;      /* slate-900 */
+        --muted-surface: #0b1324;/* deep slate */
+        --text: #e5e7eb;         /* slate-200 */
+        --text-muted: #94a3b8;    /* slate-400 */
+        --border: #1f2937;        /* slate-800 */
+        --primary: #60a5fa;       /* blue-400 */
+        --primary-ink: #bfdbfe;   /* blue-200 */
+        --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+        --shadow-md: 0 10px 30px rgba(0,0,0,.35);
+
+        /* Gray scale for homepage - Dark mode */
+        --gray-100: #1f2937;
+        --gray-200: #374151;
+        --gray-600: #9ca3af;
+        --gray-700: #e5e7eb;
+        --gray-800: #f9fafb;
+
+          /* 카드/박스류 배경/테두리/텍스트 */
+        .card,
+        .ad,
+        .sidebar .section,
+        article.article,
+        .post-card,
+        .page,
+        .post,
+        .sidebar-card {
+            background: var(--surface) !important;
+            border-color: var(--border) !important;
+            color: var(--text) !important;
+        }
+
+        /* 제목/링크 대비 강화 */
+        .post-title,
+        .post-title a,
+        .title a,
+        .post-card .title a {
+            color: var(--text) !important;
+            text-decoration: none;
+        }
+
+        /* 메타/요약은 약간 옅게 */
+        .post-meta,
+        .post-date,
+        .excerpt,
+        .post-excerpt {
+            color: var(--text-muted) !important;
+        }
+
+        /* 읽기 링크/태그 칩 */
+        .read-more { color: var(--primary) !important; }
+        .tag,
+        .category,
+        .tag-chip {
+            background: var(--muted-surface) !important;
+            color: var(--text-muted) !important;
+            border: 1px solid var(--border) !important;
+        }
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.75;
+      font-size: var(--fs-1);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    /* Enhanced focus states for accessibility */
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+    }
+    .skip-link:focus {
+      position: fixed; left: 16px; top: 16px; width: auto; height: auto;
+      background: var(--surface); color: var(--primary-ink); padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 10px; z-index: 9999;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 1000; backdrop-filter: saturate(180%) blur(10px);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-wrap { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 12px; }
+    .brand {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      font-weight: 700; color: var(--text); letter-spacing: .2px; font-size: 1.05rem;
+    }
+    .brand .mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--muted-surface); box-shadow: var(--shadow-sm); }
+
+    nav[aria-label="Primary"] { display: flex; align-items: center; gap: 6px; }
+    .nav-list { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; }
+    .nav-list a {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-muted);
+      padding: 8px 12px; border-radius: 10px; border: 1px solid transparent;
+    }
+    .nav-list a:hover { color: var(--text); background: var(--muted-surface); border-color: var(--border); }
+
+    .nav-toggle { display: none; border: 1px solid var(--border); background: var(--surface); border-radius: 10px; padding: 8px 10px; }
+
+    /* Layout - single column for home */
+    main { padding: 28px 0 48px; }
+    .home-grid { display: block; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+
+    /* Article - full width for home */
+    article.home-content { padding: 0; background: none; border: none; box-shadow: none; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); background: var(--surface); }
+    .footer-wrap { padding: 32px 0; color: var(--text-muted); text-align: center; }
+    .footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 8px 0 14px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; padding: 6px 8px; border-radius: 8px; }
+    .footer-links a:hover { color: var(--text); background: var(--muted-surface); }
+
+    /* Mobile nav */
+    @media (max-width: 880px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-list { display: none; position: absolute; right: 20px; top: 64px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px; box-shadow: var(--shadow-md); }
+      .nav-list.open { display: flex; flex-direction: column; min-width: 200px; }
+      .nav-list a { padding: 10px 12px; }
+    }
+
+    /* Reading progress */
+    .progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 60%, transparent)); z-index: 1001; }
+  </style>
+    </head>
+    <body>
+        <a class="skip-link" href="#content">Skip to content</a>
+        <div class="progress" id="progress"></div>
+
+        <header role="banner">
+            <div class="container header-wrap">
+                <a href="{{ '/' | relative_url }}" class="brand"
+                    aria-label="{{ site.title }} home">
+                    <span class="mark" aria-hidden="true">📝</span>
+                    <span>{{ site.title }}</span>
+                </a>
+
+                <nav aria-label="Primary">
+                    <button class="nav-toggle" id="navToggle"
+                        aria-expanded="false"
+                        aria-controls="primaryNav">☰</button>
+                    <ul id="primaryNav" class="nav-list">
+                        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+                        <li><a
+                                href="{{ '/about' | relative_url }}">About</a></li>
+                        <li><a
+                                href="{{ '/categories' | relative_url }}">Categories</a></li>
+                        <li><a
+                                href="{{ '/privacy' | relative_url }}">Privacy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main id="main" role="main">
+            <div class="container">
+                <!-- Top Ad (optional) -->
+                <div class="ad card" aria-label="Advertisement"
+                    role="complementary" style="padding: 20px; margin: 18px 0;">
+                    <!-- adsense-slot-1 -->
+                    Top Banner — place AdSense code here after approval
+                </div>
+
+                <div class="home-grid">
+                    <article class="home-content" itemscope
+                        itemtype="https://schema.org/Article">
+                        <div id="content">
+                            {{ content }}
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </main>
+
+        <footer role="contentinfo">
+            <div class="container footer-wrap">
+                <nav class="footer-links" aria-label="Footer">
+                    <a href="{{ '/about' | relative_url }}">About</a>
+                    <a href="{{ '/privacy' | relative_url }}">Privacy</a>
+                </nav>
+                <div>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All
+                    rights reserved.</div>
+            </div>
+        </footer>
+
+        {% if site.google_analytics %}
+        <script async
+            src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+        <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '{{ site.google_analytics }}');
+  </script>
+        {% endif %}
+
+        <script>
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const primaryNav = document.getElementById('primaryNav');
+    navToggle?.addEventListener('click', () => {
+      const open = primaryNav.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  </script>
+    </body>
+</html>
